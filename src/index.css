@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root,
+.app {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  color: #2a3547 /*black-600-p*/;
+}
+
+a {
+  text-decoration: none;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+button {
+  cursor: pointer;
+}
+
+ul,
+li {
+  list-style: none;
+}
+
+input {
+  outline: none;
+}
+
+#sidebar a.active {
+  color: white;
+}
+#sidebar a.active::before{
+  background-color: #5D87FF;
+}
+
+#sidebar a.active:hover::before{
+  background-color: #3F71FF;
+}
