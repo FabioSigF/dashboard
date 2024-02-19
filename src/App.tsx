@@ -1,10 +1,11 @@
-import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Sidebar from "./layouts/Sidebar";
-import "./index.css";
+import "./styles/global.css";
 import Navbar from "./layouts/Navbar";
 import { useAppSelector } from "./redux/store";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 const App = () => {
   const { isOpen } = useAppSelector((state) => state.sidebar);
@@ -16,6 +17,8 @@ const App = () => {
           <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login/>} />
+            <Route path="/register" element={<Register />} />
           </Routes>
         </div>
       </Router>

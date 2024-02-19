@@ -17,7 +17,9 @@ body,
 
 a {
   text-decoration: none;
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-property: color, background-color, border-color,
+    text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter,
+    backdrop-filter;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }
@@ -35,13 +37,20 @@ input {
   outline: none;
 }
 
+.inputStyle input:not(:placeholder-shown) + label,
+.inputStyle input:focus + label {
+  font-size: 0.675rem;
+  transform: translateY(-30px) translateX(-5px);
+  transition: all 250ms;
+}
+
 #sidebar a.active {
   color: white;
 }
-#sidebar a.active::before{
-  background-color: #5D87FF;
+#sidebar a.active::before {
+  background-color: #5d87ff;
 }
 
-#sidebar a.active:hover::before{
-  background-color: #3F71FF;
+#sidebar a.active:hover::before {
+  background-color: #3f71ff;
 }
