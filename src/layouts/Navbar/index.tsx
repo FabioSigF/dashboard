@@ -16,8 +16,11 @@ const Navbar = () => {
   return (
     <nav id="navbar" className="sticky top-0 left-0 w-full h-[80px] z-30">
       <div className="px-4 w-full flex justify-between items-center h-full">
-        <div className={`${iconWrapperStyle}`}>
-          <MdMenu className="text-2xl" onClick={() => dispatch(onToggle())} />
+        <div
+          className={`${iconWrapperStyle}`}
+          onClick={() => dispatch(onToggle())}
+        >
+          <MdMenu className="text-2xl" />
         </div>
 
         <ul className="flex gap-4">

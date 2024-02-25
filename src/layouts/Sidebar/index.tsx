@@ -3,6 +3,7 @@ import {
   MdInsertChartOutlined,
   MdOutlineDashboard,
   MdOutlinePhone,
+  MdOutlineSell,
 } from "react-icons/md";
 import Logo from "../../components/Logo";
 import { NavLink } from "react-router-dom";
@@ -29,6 +30,11 @@ const Sidebar = () => {
           title: "Análises",
           icon: <MdInsertChartOutlined />,
           link: "/analytics",
+        },
+        {
+          title: "Cadastro de Vendas",
+          icon: <MdOutlineSell />,
+          link: "/new-sell",
         },
         {
           title: "Agenda",
@@ -71,7 +77,7 @@ const Sidebar = () => {
                   className="flex gap-4 items-center px-2 py-[10px] relative before:hover:bg-gray-100 before:rounded-md before:bg-white before:w-full before:h-full before:absolute before:top-0 before:-left-[3px] before:transition"
                 >
                   <span className="text-2xl relative">{item.icon}</span>
-                  <p className={`font-medium relative ${isOpen ? "" : "text-white"}`}>{item.title}</p>
+                  <p className={`font-medium relative text-nowrap ${isOpen ? "" : "text-white hidden"}`}>{item.title}</p>
                 </NavLink>
               </li>
             ))}
