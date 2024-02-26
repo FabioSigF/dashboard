@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NewSell from "./pages/NewSell";
 import ItemSell from "./pages/NewSell/ItemSell";
+import NewInstitutionModal from "./layouts/Modal/NewInsitutionModal";
 
 const App = () => {
   const { isOpen } = useAppSelector((state) => state.sidebar);
@@ -15,6 +16,7 @@ const App = () => {
     <div>
       <Router>
         <Sidebar />
+        <NewInstitutionModal />
         <div className={`relative ${isOpen ? "ml-[280px]" : "ml-[80px]"}`}>
           <Navbar />
           <Routes>

@@ -25,7 +25,7 @@ const ItemSell = (props: Props) => {
     ],
     cores: ["Branco", "Azul", "Verde"],
     icone: "",
-    cor_identifica: "bg-primary-300-p",
+    cor_identifica: "blue-400",
   };
 
   const carrinho = [
@@ -75,7 +75,7 @@ const ItemSell = (props: Props) => {
   ];
 
   const inputStyle =
-    "border border-gray-300-p text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500";
+    "border border-gray-300-p text-gray-900 text-sm rounded-md focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 outline-none disabled:cursor-not-allowed";
 
   const [tipoInput, setTipoInput] = useState("");
   const [tamanhoInput, setTamanhoInput] = useState("");
@@ -83,6 +83,8 @@ const ItemSell = (props: Props) => {
   const [corInput, setCorInput] = useState("");
   const [coresDisponiveisSelect, setCoresDisponiveisSelect] = useState([""]);
   const [cart, setCart] = useState(carrinho);
+  const [cartTotalPrice, setCartTotalPrice] = useState(0);
+
   const atualizaCoresDisponiveis = () => {
     const tipo = tipoInput.split(" ");
 
@@ -116,10 +118,25 @@ const ItemSell = (props: Props) => {
     setCart(newCart);
   };
 
+  const updateCartPrice = () => {
+    setCartTotalPrice(0);
+    let price = 0;
+
+    cart.forEach((item) => {
+      price += item.preco_unidade * item.quantidade;
+    });
+
+    setCartTotalPrice(price);
+  };
+
   //Sempre que atualizar o tipo do uniforme, as cores disponíveis mudam
   useEffect(() => {
     atualizaCoresDisponiveis();
   }, [tipoInput]);
+
+  useEffect(() => {
+    updateCartPrice();
+  }, [cart]);
 
   return (
     <div className="mx-6 my-6">
@@ -201,7 +218,7 @@ const ItemSell = (props: Props) => {
         </div>
         <div>
           <button
-            className="bg-green-400 text-white flex items-center gap-4 py-2 px-4 rounded-md cursor-pointer hover:bg-green-500 transition w-full"
+            className="bg-green-400 text-white flex items-center gap-4 py-2 px-4 rounded-md cursor-pointer hover:bg-green-500 transition w-full disabled:bg-gray-300"
             type="submit"
             onClick={(e) => handleAddCart(e)}
           >
@@ -239,22 +256,21 @@ const ItemSell = (props: Props) => {
           </thead>
           <tbody>
             {cart.map((item, key) => (
-              <tr
-                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                key={key}
-              >
+              <tr className="bg-white border-b  hover:bg-gray-50" key={key}>
                 <th
                   scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
                 >
                   {item.tipo}
                 </th>
                 <td className="px-6 py-4">{item.cor}</td>
                 <td className="px-6 py-4">{item.tamanho}</td>
                 <td className="px-6 py-4">{item.quantidade}</td>
-                <td className="px-6 py-4">{item.preco_unidade.toFixed(2)}</td>
                 <td className="px-6 py-4">
-                  {(item.preco_unidade * item.quantidade).toFixed(2)}
+                  R$ {item.preco_unidade.toFixed(2)}
+                </td>
+                <td className="px-6 py-4">
+                  R$ {(item.preco_unidade * item.quantidade).toFixed(2)}
                 </td>
                 <td className="px-6 py-4 flex gap-1">
                   <div className="text-xl cursor-pointer hover:text-black-600-p">
@@ -269,6 +285,15 @@ const ItemSell = (props: Props) => {
                 </td>
               </tr>
             ))}
+            <tr className="relative bg-white font-medium text-gray-900 whitespace-nowrap">
+              <th></th>
+              <td className="px-6 py-4"></td>
+              <td className="px-6 py-4"></td>
+              <td className="px-6 py-4"></td>
+              <td className="px-6 py-4 ">Subtotal:</td>
+              <td className="px-6 py-4">R$ {cartTotalPrice.toFixed(2)}</td>
+              <td className="px-6 py-4"></td>
+            </tr>
           </tbody>
         </table>
       </div>

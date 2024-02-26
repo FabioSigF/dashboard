@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import PageTitle from "../../components/PageTitle";
 import { Breadcrumb } from "../../types/global";
 import { MdAddCircleOutline, MdSchool, MdSearch } from "react-icons/md";
+import Button from "../../components/Button";
 
 type Props = {};
 
@@ -32,25 +33,30 @@ const NewSell = (props: Props) => {
   return (
     <div className="mx-6 my-6">
       <PageTitle title="Cadastrar Venda" breadcrumb={breadcrumb} />
-      <form
-        className="flex gap-2 items-center border border-gray-300-p rounded-md relative w-full py-2 px-3 mt-12 mb-8"
-        onSubmit={(e) => handleOnSearch(e)}
-      >
-        <MdSearch className="absolute" />
-        <input
-          type="text"
-          className="w-full pl-6 text-sm"
-          placeholder="Digite o nome da instituição..."
-        />
-      </form>
+      <div className="flex gap-16 justify-between items-baseline">
+        <form
+          className="flex gap-2 items-center border border-gray-300-p rounded-md relative w-full py-2 px-3 mt-12 mb-8 max-w-[60%]"
+          onSubmit={(e) => handleOnSearch(e)}
+        >
+          <MdSearch className="absolute" />
+          <input
+            type="text"
+            className="w-full pl-6 text-sm"
+            placeholder="Digite o nome da instituição..."
+          />
+        </form>
+        <Button type="submit">
+          Adicionar Instituição
+        </Button>
+      </div>
       <div className="p-6 border border-gray-300-p rounded-md">
         <div className="flex items-center pb-4 mb-4 border-b border-gray-300">
           <div className="w-4/6">
             <div
-              className={`w-min flex gap-6 relative px-3 before:absolute before:w-[45%] before:bg-primary-300 before:h-full before:rounded-md before:top-0 before:left-0 before:transition-all transition ${
+              className={`w-min flex gap-6 relative px-3 transition bg-gray-50 rounded-md py-2 before:absolute before:w-[45%] before:bg-primary-300 before:h-full before:rounded-md before:top-0 before:left-0 before:transition-all ${
                 sectionSchoolActive
                   ? "before:translate-x-0"
-                  : "before:translate-x-[95%] before:w-[50%]"
+                  : "before:translate-x-[80%] before:w-[55%]"
               }`}
             >
               <span
@@ -85,9 +91,7 @@ const NewSell = (props: Props) => {
               </div>
               <div className="w-1/6">{item.tipo}</div>
               <div className="w-1/6">
-                <button
-                  className="bg-green-400 text-white flex items-center gap-4 py-2 px-4 rounded-md cursor-pointer hover:bg-green-500 transition w-full"
-                >
+                <button className="bg-green-400 text-white flex items-center gap-4 py-2 px-4 rounded-md cursor-pointer hover:bg-green-500 transition w-full">
                   <MdAddCircleOutline className="text-2xl" />
                   <span>Nova venda</span>
                 </button>
