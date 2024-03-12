@@ -1,24 +1,33 @@
 import React, { useState } from "react";
 import PageTitle from "../../components/PageTitle";
-import { Breadcrumb } from "../../types/global";
-import { MdAddCircleOutline, MdSchool, MdSearch } from "react-icons/md";
+import { Breadcrumb } from "../../types/global.type";
+import {
+  MdAddCircleOutline,
+  MdSchool,
+  MdSearch,
+  MdWarehouse,
+} from "react-icons/md";
 import Button from "../../components/Button";
+import { useAppDispatch } from "../../redux/store";
+import { onOpen as onOpenNewCompanyModal } from "../../redux/newCompanyModal/slice";
+import { onOpen as onOpenStockModal } from "../../redux/stockModal/slice";
+import { useNavigate } from "react-router-dom";
 
-type Props = {};
-
-const NewSell = (props: Props) => {
+const Business = () => {
   const breadcrumb: Array<Breadcrumb> = [
     {
       title: "Aplicativos",
       link: "/app",
     },
     {
-      title: "Cadastrar Venda",
-      link: "/app/new-sell",
+      title: "Comércio",
+      link: "/app/business",
     },
   ];
 
   const [sectionSchoolActive, setSectionSchoolActive] = useState(true);
+
+  //FAKE DATA
   const escolas = [
     { nome: "Centro Pedagógico Metta", tipo: "Particular" },
     { nome: "E.E Marechal Castello Branco", tipo: "Pública" },
@@ -26,13 +35,26 @@ const NewSell = (props: Props) => {
     { nome: "Colégio Drummong", tipo: "Particular" },
   ];
 
+  const navigate = useNavigate();
+
   const handleOnSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   };
 
+  const dispatch = useAppDispatch();
+
+  const handleOnAddCompany = () => {
+    dispatch(onOpenNewCompanyModal());
+    navigate("?q=add-school");
+  };
+
+  const handleOnOpenStock = () => {
+    dispatch(onOpenStockModal());
+  };
+
   return (
     <div className="mx-6 my-6">
-      <PageTitle title="Cadastrar Venda" breadcrumb={breadcrumb} />
+      <PageTitle title="Comércio" breadcrumb={breadcrumb} />
       <div className="flex gap-16 justify-between items-baseline">
         <form
           className="flex gap-2 items-center border border-gray-300-p rounded-md relative w-full py-2 px-3 mt-12 mb-8 max-w-[60%]"
@@ -45,13 +67,13 @@ const NewSell = (props: Props) => {
             placeholder="Digite o nome da instituição..."
           />
         </form>
-        <Button type="submit">
-          Adicionar Instituição
-        </Button>
+        <div onClick={() => handleOnAddCompany()}>
+          <Button type="button">Adicionar Instituição</Button>
+        </div>
       </div>
       <div className="p-6 border border-gray-300-p rounded-md">
         <div className="flex items-center pb-4 mb-4 border-b border-gray-300">
-          <div className="w-4/6">
+          <div className="w-3/6">
             <div
               className={`w-min flex gap-6 relative px-3 transition bg-gray-50 rounded-md py-2 before:absolute before:w-[45%] before:bg-primary-300 before:h-full before:rounded-md before:top-0 before:left-0 before:transition-all ${
                 sectionSchoolActive
@@ -78,19 +100,23 @@ const NewSell = (props: Props) => {
             </div>
           </div>
           <span className="w-1/6">Tipo</span>
-          <span className="w-1/6">Ação</span>
+          <span className="w-2/6">Ação</span>
         </div>
         <div className="flex flex-col gap-2">
           {escolas.map((item, key) => (
             <div className="flex items-center text-sm font-medium" key={key}>
-              <div className="w-4/6 flex gap-2 items-center">
+              <div className="w-3/6 flex gap-2 items-center">
                 <div className="rounded-full bg-primary-300 p-2 text-white">
                   <MdSchool />
                 </div>
                 <span>{item.nome}</span>
               </div>
               <div className="w-1/6">{item.tipo}</div>
-              <div className="w-1/6">
+              <div className="w-2/6 flex gap-2">
+                <button className="bg-secondary-300 text-white flex items-center gap-4 py-2 px-4 rounded-md cursor-pointer hover:bg-secondary-400 transition w-full">
+                  <MdWarehouse className="text-2xl" />
+                  <span onClick={() => handleOnOpenStock()}>Ver estoque</span>
+                </button>
                 <button className="bg-green-400 text-white flex items-center gap-4 py-2 px-4 rounded-md cursor-pointer hover:bg-green-500 transition w-full">
                   <MdAddCircleOutline className="text-2xl" />
                   <span>Nova venda</span>
@@ -104,4 +130,4 @@ const NewSell = (props: Props) => {
   );
 };
 
-export default NewSell;
+export default Business;

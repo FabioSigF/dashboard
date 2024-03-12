@@ -3,7 +3,7 @@ import {
   MdInsertChartOutlined,
   MdOutlineDashboard,
   MdOutlinePhone,
-  MdOutlineSell,
+  MdOutlineWarehouse,
 } from "react-icons/md";
 import Logo from "../../components/Logo";
 import { NavLink } from "react-router-dom";
@@ -32,9 +32,9 @@ const Sidebar = () => {
           link: "/analytics",
         },
         {
-          title: "Cadastro de Vendas",
-          icon: <MdOutlineSell />,
-          link: "/new-sell",
+          title: "Comércio",
+          icon: <MdOutlineWarehouse />,
+          link: "/business",
         },
         {
           title: "Agenda",

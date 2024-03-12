@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PageTitle from "../../../components/PageTitle";
-import { Breadcrumb } from "../../../types/global";
+import { Breadcrumb } from "../../../types/global.type";
 import { MdAddCircleOutline } from "react-icons/md";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 

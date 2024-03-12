@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from "react";
-import Button from "../../components/Button";
 
 type Props = {
   isOpen?: boolean;
@@ -42,7 +41,7 @@ const Modal = ({ isOpen, onClose, title, body, disabled }: Props) => {
         className={`overflow-y-auto overflow-x-hidden flex top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full
         ${showModal ? "opacity-100" : "hidden opacity-0"}`}
       >
-        <div className="relative p-4 w-full max-w-md max-h-full">
+        <div className="relative p-4 w-full max-w-[80%] max-h-full">
           {/*CONTENT*/}
           <div className="relative bg-white rounded-md shadow">
             {/*HEADER*/}
@@ -63,9 +62,9 @@ const Modal = ({ isOpen, onClose, title, body, disabled }: Props) => {
                 >
                   <path
                     stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
                     d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
                   />
                 </svg>

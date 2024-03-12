@@ -1,6 +1,6 @@
 import React from "react";
 import { MdChevronRight } from "react-icons/md";
-import { Breadcrumb } from "../../types/global";
+import { Breadcrumb } from "../../types/global.type";
 type Props = {
   title: string;
   breadcrumb: Array<Breadcrumb>;
