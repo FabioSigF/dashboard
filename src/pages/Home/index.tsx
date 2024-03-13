@@ -1,10 +1,14 @@
 import React from "react";
+import { FaShippingFast } from "react-icons/fa";
 import { IoShirtOutline } from "react-icons/io5";
 import {
+  MdAddCircleOutline,
+  MdGroup,
   MdOutlineCreditCard,
   MdOutlinePerson,
   MdOutlineShoppingBag,
 } from "react-icons/md";
+import Button from "../../components/Button";
 
 const Home = () => {
   const cards = [
@@ -56,6 +60,19 @@ const Home = () => {
           : dataTempo.getMonth()
       }/${dataTempo.getFullYear()}`;
     }
+  }
+
+  function mostraData(tempo: string) {
+    const date = new Date(tempo);
+    return `${date.getDate()}/${
+      date.getMonth() < 10 ? `0${date.getMonth()}` : date.getMonth()
+    }/${date.getFullYear()}`;
+  }
+
+  function mostrarHorario(tempo: string) {
+    const date = new Date(tempo);
+
+    return `${date.getHours()}:${date.getMinutes()}`;
   }
 
   const vendasRecentes = [
@@ -161,6 +178,49 @@ const Home = () => {
       ],
     },
   ];
+
+  const compromissos = [
+    {
+      title: "Vender no Metta",
+      type: "sell",
+      icon: <MdOutlineShoppingBag />,
+      bgColor: "bg-green-400",
+      date: "2024-03-11T22:45:56.053+00:00",
+      isDone: false,
+    },
+    {
+      title: "Comprar Tecido",
+      type: "buy",
+      icon: <MdOutlineCreditCard />,
+      bgColor: "bg-red-500",
+      date: "2024-03-11T22:45:56.053+00:00",
+      isDone: false,
+    },
+    {
+      title: "Entregar Uniforme ABC Escola",
+      type: "order",
+      icon: <FaShippingFast />,
+      bgColor: "bg-yellow-600",
+      date: "2024-03-11T22:45:56.053+00:00",
+      isDone: false,
+    },
+    {
+      title: "Reunião com Empresa",
+      type: "meeting",
+      icon: <MdGroup />,
+      bgColor: "bg-blue-300",
+      date: "2024-03-11T22:45:56.053+00:00",
+      isDone: false,
+    },
+    {
+      title: "Entrar em contato com fornecedor",
+      type: "contact",
+      icon: <MdGroup />,
+      bgColor: "bg-gray-400",
+      date: "2024-03-11T22:45:56.053+00:00",
+      isDone: false,
+    },
+  ];
   return (
     <div className="mx-6 my-6">
       <div className="grid grid-cols-4 gap-4">
@@ -183,6 +243,45 @@ const Home = () => {
       </div>
 
       <div className="grid grid-cols-2 gap-4">
+        <div className="p-6 border border-gray-300-p rounded-md">
+          <div className="flex justify-between items-start">
+            <div className="flex flex-col gap-2 mb-8">
+              <h2 className="text-xl font-medium">Agenda</h2>
+              <p className="text-gray-400 text-sm">Próximos Compromissos</p>
+            </div>
+            <button className="bg-green-400 text-white flex items-center gap-4 py-2 px-4 rounded-md cursor-pointer hover:bg-green-500 transition">
+              <MdAddCircleOutline className="text-2xl" />
+              <span>Novo Compromisso</span>
+            </button>
+          </div>
+          <div className="flex items-center pb-4 mb-4 border-b border-gray-300">
+            <span className="w-4/6 text-sm font-bold">Compromisso</span>
+            <span className="w-1/6 text-sm font-bold">Data</span>
+            <span className="w-1/6 text-sm font-bold">Horário</span>
+          </div>
+          <div className="flex flex-col gap-2">
+            {compromissos.length > 0 ? (compromissos.map((item, key) => (
+              <div className="flex items-center" key={key}>
+                <div className="w-4/6 flex gap-4">
+                  <div
+                    className={`rounded-md ${item.bgColor} text-white w-[40px] h-[40px] flex items-center justify-center`}
+                  >
+                    {item.icon}
+                  </div>
+                  <div className="flex flex-col">
+                    <span>{item.title}</span>
+                  </div>
+                </div>
+                <div className="w-1/6 text-sm font-bold">
+                  {mostraData(item.date)}
+                </div>
+                <div className="w-1/6 text-sm font-bold">
+                  {mostrarHorario(item.date)}
+                </div>
+              </div>
+            ))) : (<span className="text-gray-400 text-center">Não há compromissos ainda...</span>)}
+          </div>
+        </div>
         <div className="p-6 border border-gray-300-p rounded-md">
           <div className="flex flex-col gap-2 mb-8">
             <h2 className="text-xl font-medium">Vendas Recentes</h2>
