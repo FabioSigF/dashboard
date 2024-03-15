@@ -10,7 +10,7 @@ import Business from "./pages/Business";
 import ItemSell from "./pages/Business/ItemSell";
 import NewCompanyModal from "./layouts/Modal/NewCompanyModal";
 import StockModal from "./layouts/Modal/StockModal";
-
+import Schedule from "./pages/Schedule";
 
 const App = () => {
   const { isOpen } = useAppSelector((state) => state.sidebar);
@@ -26,6 +26,7 @@ const App = () => {
             <Route path="/" element={<Home />} />
             <Route path="/business" element={<Business />} />
             <Route path="/business/item" element={<ItemSell />} />
+            <Route path="/schedule" element={<Schedule />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
           </Routes>

@@ -12,6 +12,7 @@ import { useAppDispatch } from "../../redux/store";
 import { onOpen as onOpenNewCompanyModal } from "../../redux/newCompanyModal/slice";
 import { onOpen as onOpenStockModal } from "../../redux/stockModal/slice";
 import { useNavigate } from "react-router-dom";
+import ActionButton from "../../components/ActionButton";
 
 const Business = () => {
   const breadcrumb: Array<Breadcrumb> = [
@@ -57,7 +58,7 @@ const Business = () => {
       <PageTitle title="Comércio" breadcrumb={breadcrumb} />
       <div className="flex gap-16 justify-between items-baseline">
         <form
-          className="flex gap-2 items-center border border-gray-300-p rounded-md relative w-full py-2 px-3 mt-12 mb-8 max-w-[60%]"
+          className="flex gap-2 items-center shadow-primary p-containerWBoxShadow rounded-lg relative w-full  mt-12 mb-8 max-w-[60%]"
           onSubmit={(e) => handleOnSearch(e)}
         >
           <MdSearch className="absolute" />
@@ -71,7 +72,7 @@ const Business = () => {
           <Button type="button">Adicionar Instituição</Button>
         </div>
       </div>
-      <div className="p-6 border border-gray-300-p rounded-md">
+      <div className="shadow-primary p-containerWBoxShadow rounded-lg">
         <div className="flex items-center pb-4 mb-4 border-b border-gray-300">
           <div className="w-3/6">
             <div
@@ -113,14 +114,17 @@ const Business = () => {
               </div>
               <div className="w-1/6">{item.tipo}</div>
               <div className="w-2/6 flex gap-2">
-                <button className="bg-secondary-300 text-white flex items-center gap-4 py-2 px-4 rounded-md cursor-pointer hover:bg-secondary-400 transition w-full">
+                <ActionButton extraCSS="w-full">
                   <MdWarehouse className="text-2xl" />
                   <span onClick={() => handleOnOpenStock()}>Ver estoque</span>
-                </button>
-                <button className="bg-green-400 text-white flex items-center gap-4 py-2 px-4 rounded-md cursor-pointer hover:bg-green-500 transition w-full">
+                </ActionButton>
+                <ActionButton
+                  bgColor="bg-green-400 hover:bg-green-500"
+                  extraCSS="w-full"
+                >
                   <MdAddCircleOutline className="text-2xl" />
                   <span>Nova venda</span>
-                </button>
+                </ActionButton>
               </div>
             </div>
           ))}

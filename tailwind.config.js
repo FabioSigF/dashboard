@@ -16,6 +16,12 @@ export default {
         "gray-300-p": "#A1AAB2",
         "black-600-p": "#2a3547"
       },
+      boxShadow: {
+        "primary": "#919eab4d 0 0 2px, #919eab1f 0 12px 24px -4px"
+      },
+      padding: {
+        "containerWBoxShadow":  "1rem 1.5rem"
+      }
     },
     screens: {
       xs: "480px",

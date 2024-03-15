@@ -10,7 +10,7 @@ const Button = ({ type, children, secondary }: Props) => {
   return (
     <button
       type={type}
-      className={`px-6 py-3 text-white rounded-md font-bold transition text-nowrap ${
+      className={`px-6 py-3 text-white rounded-md font-bold transition text-nowrap shadow-primary ${
         secondary
           ? "bg-secondary-300 hover:bg-secondary-400"
           : "bg-primary-300 hover:bg-primary-400"

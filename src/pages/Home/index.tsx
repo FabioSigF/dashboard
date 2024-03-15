@@ -8,7 +8,6 @@ import {
   MdOutlinePerson,
   MdOutlineShoppingBag,
 } from "react-icons/md";
-import Button from "../../components/Button";
 
 const Home = () => {
   const cards = [
@@ -262,7 +261,7 @@ const Home = () => {
           <div className="flex flex-col gap-2">
             {compromissos.length > 0 ? (compromissos.map((item, key) => (
               <div className="flex items-center" key={key}>
-                <div className="w-4/6 flex gap-4">
+                <div className="w-4/6 flex gap-4 items-center">
                   <div
                     className={`rounded-md ${item.bgColor} text-white w-[40px] h-[40px] flex items-center justify-center`}
                   >
@@ -295,7 +294,7 @@ const Home = () => {
           <div className="flex flex-col gap-2">
             {vendasRecentes.map((sell, key) => (
               <div className="flex items-center" key={key}>
-                <div className="w-4/6 flex gap-4">
+                <div className="w-4/6 flex gap-4 items-center">
                   <div
                     className={`rounded-md ${
                       key % 2 === 0 ? "bg-green-400" : "bg-secondary-300"
@@ -304,8 +303,8 @@ const Home = () => {
                     <IoShirtOutline />
                   </div>
                   <div className="flex flex-col">
-                    <span>{sell.company}</span>
-                    <span className="text-gray-400 text-sm overflow-hidden">
+                    <span className="text-sm font-medium">{sell.company}</span>
+                    <span className="text-gray-400 text-xs overflow-hidden">
                       {sell.items.map((item, key) => (
                         <span key={key}>
                           {item.amount} {item.item}
