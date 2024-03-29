@@ -1,18 +1,26 @@
-import React, { useState } from "react";
-import PageTitle from "../../components/PageTitle";
-import { Breadcrumb } from "../../types/global.type";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+//TYPES
+import { Breadcrumb, School } from "../../types/global.type";
+
+//ICONS
 import {
   MdAddCircleOutline,
   MdSchool,
   MdSearch,
   MdWarehouse,
 } from "react-icons/md";
+
+//COMPONENTS
+import PageTitle from "../../components/PageTitle";
 import Button from "../../components/Button";
-import { useAppDispatch } from "../../redux/store";
+import ActionButton from "../../components/ActionButton";
+
+//REDUX
 import { onOpen as onOpenNewCompanyModal } from "../../redux/newCompanyModal/slice";
 import { onOpen as onOpenStockModal } from "../../redux/stockModal/slice";
-import { useNavigate } from "react-router-dom";
-import ActionButton from "../../components/ActionButton";
+import { useAppDispatch } from "../../redux/store";
+import { getAllSchools } from "../../services/school.service";
 
 const Business = () => {
   const breadcrumb: Array<Breadcrumb> = [
@@ -27,14 +35,6 @@ const Business = () => {
   ];
 
   const [sectionSchoolActive, setSectionSchoolActive] = useState(true);
-
-  //FAKE DATA
-  const escolas = [
-    { nome: "Centro Pedagógico Metta", tipo: "Particular" },
-    { nome: "E.E Marechal Castello Branco", tipo: "Pública" },
-    { nome: "E.E Américo René Giannetti", tipo: "Pública" },
-    { nome: "Colégio Drummong", tipo: "Particular" },
-  ];
 
   const navigate = useNavigate();
 
@@ -52,6 +52,19 @@ const Business = () => {
   const handleOnOpenStock = () => {
     dispatch(onOpenStockModal());
   };
+
+  const [schools, setSchools] = useState<School[]>();
+
+  const getSchools = async () => {
+    const res = await getAllSchools();
+
+    if (res != null) {
+      setSchools(res);
+    }
+  };
+  useEffect(() => {
+    getSchools();
+  }, []);
 
   return (
     <div className="mx-6 my-6">
@@ -104,30 +117,34 @@ const Business = () => {
           <span className="w-2/6">Ação</span>
         </div>
         <div className="flex flex-col gap-2">
-          {escolas.map((item, key) => (
-            <div className="flex items-center text-sm font-medium" key={key}>
-              <div className="w-3/6 flex gap-2 items-center">
-                <div className="rounded-full bg-primary-300 p-2 text-white">
-                  <MdSchool />
+          {schools ? (
+            schools.map((item, key) => (
+              <div className="flex items-center text-sm font-medium" key={key}>
+                <div className="w-3/6 flex gap-2 items-center">
+                  <div className="rounded-full bg-primary-300 p-2 text-white">
+                    <MdSchool />
+                  </div>
+                  <span>{item.name}</span>
                 </div>
-                <span>{item.nome}</span>
+                <div className="w-1/6">{item.category}</div>
+                <div className="w-2/6 flex gap-2">
+                  <ActionButton extraCSS="w-full">
+                    <MdWarehouse className="text-2xl" />
+                    <span onClick={() => handleOnOpenStock()}>Ver estoque</span>
+                  </ActionButton>
+                  <ActionButton
+                    bgColor="bg-green-400 hover:bg-green-500"
+                    extraCSS="w-full"
+                  >
+                    <MdAddCircleOutline className="text-2xl" />
+                    <span>Nova venda</span>
+                  </ActionButton>
+                </div>
               </div>
-              <div className="w-1/6">{item.tipo}</div>
-              <div className="w-2/6 flex gap-2">
-                <ActionButton extraCSS="w-full">
-                  <MdWarehouse className="text-2xl" />
-                  <span onClick={() => handleOnOpenStock()}>Ver estoque</span>
-                </ActionButton>
-                <ActionButton
-                  bgColor="bg-green-400 hover:bg-green-500"
-                  extraCSS="w-full"
-                >
-                  <MdAddCircleOutline className="text-2xl" />
-                  <span>Nova venda</span>
-                </ActionButton>
-              </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <span className="text-sm text-gray-300">Carregando escolas...</span>
+          )}
         </div>
       </div>
     </div>

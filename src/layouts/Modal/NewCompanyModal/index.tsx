@@ -12,10 +12,7 @@ import ErrorInput from "../../../components/ErrorInput";
 import { ZodType, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import {
-  NewCompanyModal as NewCompanyModalType,
-  NewSchoolModal as NewSchoolModalType,
-} from "../../../types/newCompanyModal.type";
+import { Company, School } from "../../../types/global.type";
 import { Link } from "react-router-dom";
 
 const NewCompanyModal = () => {
@@ -30,8 +27,8 @@ const NewCompanyModal = () => {
   };
 
   //REACT HOOK FORMS + ZOD
-  const schemaSchool: ZodType<NewSchoolModalType> = z.object({
-    nome: z
+  const schemaSchool: ZodType<School> = z.object({
+    name: z
       .string()
       .min(1, "O nome não pode ser vazio.")
       .transform((name) => {
@@ -43,16 +40,16 @@ const NewCompanyModal = () => {
           })
           .join(" ");
       }),
-    categoria: z.string().min(1, "A categoria não pode ser vazia."),
-    cores: z.string().transform((cor) => {
+    category: z.string().min(1, "A categoria não pode ser vazia."),
+    colors: z.string().transform((cor) => {
       return cor
         .split(",")
         .map((word) => {
           return word[0].toLocaleUpperCase().concat(word.substring(1)).trim();
         })
-        .join(" ");
+        .join(",");
     }),
-    tamanhos: z
+    sizes: z
       .string()
       .min(1, "É necessário ao menos 1 tamanho.")
       .transform((tam) => {
@@ -64,12 +61,12 @@ const NewCompanyModal = () => {
   });
 
   //REACT HOOK FORMS + ZOD
-  const schemaCompany: ZodType<NewCompanyModalType> = z.object({
-    nome: z
+  const schemaCompany: ZodType<Company> = z.object({
+    name: z
       .string()
       .min(1, "O nome não pode ser vazio.")
-      .transform((name) => {
-        return name
+      .transform((item) => {
+        return item
           .trim()
           .split(" ")
           .map((word) => {
@@ -81,15 +78,24 @@ const NewCompanyModal = () => {
       .string()
       .min(14, "O CPNJ não está completo.")
       .max(18, "O CNPJ é inválido."),
-    segmento: z.string().min(1, "O segmento não pode ser vazio."),
-    telefone: z.string(),
-    celular: z.string(),
+    category: z.string().min(1, "O segmento não pode ser vazio."),
+    sizes: z
+      .string()
+      .min(1, "É necessário ao menos 1 tamanho.")
+      .transform((tam) => {
+        return tam
+          .split(",")
+          .map((word) => word.trim().toLocaleUpperCase())
+          .join(",");
+      }),
+    tel: z.string(),
+    cel: z.string(),
   });
 
-  const submitNewSchool = (data: NewSchoolModalType) => {
+  const submitNewSchool = (data: School) => {
     console.log("Funcionou Escola!");
   };
-  const submitNewCompany = (data: NewCompanyModalType) => {
+  const submitNewCompany = (data: Company) => {
     console.log("Funcionou Empresa!");
   };
 
@@ -97,13 +103,13 @@ const NewCompanyModal = () => {
     register: regSchool,
     handleSubmit: handleSubmitSchool,
     formState: { errors: errorsSchool },
-  } = useForm<NewSchoolModalType>({ resolver: zodResolver(schemaSchool) });
+  } = useForm<School>({ resolver: zodResolver(schemaSchool) });
 
   const {
     register: regCompany,
     handleSubmit: handleSubmitCompany,
     formState: { errors: errorsCompany },
-  } = useForm<NewCompanyModalType>({ resolver: zodResolver(schemaCompany) });
+  } = useForm<Company>({ resolver: zodResolver(schemaCompany) });
 
   //STYLE
   const inputStyle =
@@ -121,22 +127,22 @@ const NewCompanyModal = () => {
             type="text"
             className={`${inputStyle}`}
             placeholder="E. E ..."
-            {...regSchool("nome")}
+            {...regSchool("name")}
           />
-          {errorsSchool.nome && (
-            <ErrorInput message={errorsSchool.nome.message} />
+          {errorsSchool.name && (
+            <ErrorInput message={errorsSchool.name.message} />
           )}
         </div>
         <div>
           <label className="block mb-2 text-sm font-medium text-gray-900">
             Categoria
           </label>
-          <select className={`${inputStyle}`} {...regSchool("categoria")}>
+          <select className={`${inputStyle}`} {...regSchool("category")}>
             <option value="Pública">Pública</option>
             <option value="Privada">Privada</option>
           </select>
-          {errorsSchool.categoria && (
-            <ErrorInput message={errorsSchool.categoria.message} />
+          {errorsSchool.category && (
+            <ErrorInput message={errorsSchool.category.message} />
           )}
         </div>
         <div>
@@ -147,10 +153,10 @@ const NewCompanyModal = () => {
             rows={2}
             className={`${inputStyle}`}
             placeholder="Azul Marinho, Amarelo, Roxo..."
-            {...regSchool("cores")}
+            {...regSchool("colors")}
           ></textarea>
-          {errorsSchool.cores && (
-            <ErrorInput message={errorsSchool.cores.message} />
+          {errorsSchool.colors && (
+            <ErrorInput message={errorsSchool.colors.message} />
           )}
         </div>
         <div>
@@ -161,10 +167,10 @@ const NewCompanyModal = () => {
             rows={2}
             className={`${inputStyle}`}
             placeholder="12, 14, P, M, G"
-            {...regSchool("tamanhos")}
+            {...regSchool("sizes")}
           ></textarea>
-          {errorsSchool.tamanhos && (
-            <ErrorInput message={errorsSchool.tamanhos.message} />
+          {errorsSchool.sizes && (
+            <ErrorInput message={errorsSchool.sizes.message} />
           )}
         </div>
         <Button type="submit">Cadastrar Escola</Button>
@@ -186,10 +192,10 @@ const NewCompanyModal = () => {
             type="text"
             className={`${inputStyle}`}
             placeholder="Padaria do Seu João..."
-            {...regCompany("nome")}
+            {...regCompany("name")}
           />
-          {errorsCompany.nome && (
-            <ErrorInput message={errorsCompany.nome.message} />
+          {errorsCompany.name && (
+            <ErrorInput message={errorsCompany.name.message} />
           )}
         </div>
         <div>
@@ -216,7 +222,7 @@ const NewCompanyModal = () => {
           >
             Segmento
           </label>
-          <select className={`${inputStyle}`} {...regCompany("segmento")}>
+          <select className={`${inputStyle}`} {...regCompany("category")}>
             <option value="Pública">Alimentação e Bebidas</option>
             <option value="Privada">Construção</option>
             <option value="Privada">Educação</option>
@@ -229,8 +235,8 @@ const NewCompanyModal = () => {
             <option value="Privada">Vestuário e calçados</option>
             <option value="Privada">Outros</option>
           </select>
-          {errorsCompany.segmento && (
-            <ErrorInput message={errorsCompany.segmento.message} />
+          {errorsCompany.category && (
+            <ErrorInput message={errorsCompany.category.message} />
           )}
         </div>
         <div className="grid grid-cols-2 gap-4">
@@ -245,10 +251,10 @@ const NewCompanyModal = () => {
               type="text"
               className={`${inputStyle}`}
               placeholder="(34) 3223-3223"
-              {...regCompany("telefone")}
+              {...regCompany("tel")}
             />
-            {errorsCompany.telefone && (
-              <ErrorInput message={errorsCompany.telefone.message} />
+            {errorsCompany.tel && (
+              <ErrorInput message={errorsCompany.tel.message} />
             )}
           </div>
           <div>
@@ -262,10 +268,10 @@ const NewCompanyModal = () => {
               type="text"
               className={`${inputStyle}`}
               placeholder="(34) 9 9999-9999"
-              {...regCompany("celular")}
+              {...regCompany("cel")}
             />
-            {errorsCompany.celular && (
-              <ErrorInput message={errorsCompany.celular.message} />
+            {errorsCompany.cel && (
+              <ErrorInput message={errorsCompany.cel.message} />
             )}
           </div>
         </div>
