@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 //TYPES
-import { Breadcrumb, School } from "../../types/global.type";
+import { Breadcrumb, Company, School } from "../../types/global.type";
 
 //ICONS
 import {
   MdAddCircleOutline,
+  MdBusiness,
   MdSchool,
   MdSearch,
   MdWarehouse,
@@ -21,6 +22,7 @@ import { onOpen as onOpenNewCompanyModal } from "../../redux/newCompanyModal/sli
 import { onOpen as onOpenStockModal } from "../../redux/stockModal/slice";
 import { useAppDispatch } from "../../redux/store";
 import { getAllSchools } from "../../services/school.service";
+import { getAllCompanies } from "../../services/company.service";
 
 const Business = () => {
   const breadcrumb: Array<Breadcrumb> = [
@@ -53,17 +55,29 @@ const Business = () => {
     dispatch(onOpenStockModal());
   };
 
-  const [schools, setSchools] = useState<School[]>();
+  const [companies, setCompanies] = useState<Company[]>();
+
+  const [school, setSchool] = useState<School[]>();
 
   const getSchools = async () => {
     const res = await getAllSchools();
-
+    console.log(res);
     if (res != null) {
-      setSchools(res);
+      setSchool(res);
     }
   };
+
+  const getCompanies = async () => {
+    const res = await getAllCompanies();
+    console.log(res);
+    if (res != null) {
+      setCompanies(res);
+    }
+  };
+
   useEffect(() => {
     getSchools();
+    getCompanies();
   }, []);
 
   return (
@@ -116,34 +130,83 @@ const Business = () => {
           <span className="w-1/6">Tipo</span>
           <span className="w-2/6">Ação</span>
         </div>
-        <div className="flex flex-col gap-2">
-          {schools ? (
-            schools.map((item, key) => (
-              <div className="flex items-center text-sm font-medium" key={key}>
-                <div className="w-3/6 flex gap-2 items-center">
-                  <div className="rounded-full bg-primary-300 p-2 text-white">
-                    <MdSchool />
-                  </div>
-                  <span>{item.name}</span>
-                </div>
-                <div className="w-1/6">{item.category}</div>
-                <div className="w-2/6 flex gap-2">
-                  <ActionButton extraCSS="w-full">
-                    <MdWarehouse className="text-2xl" />
-                    <span onClick={() => handleOnOpenStock()}>Ver estoque</span>
-                  </ActionButton>
-                  <ActionButton
-                    bgColor="bg-green-400 hover:bg-green-500"
-                    extraCSS="w-full"
+        <div>
+          {sectionSchoolActive ? (
+            <div className="flex flex-col gap-2">
+              {school ? (
+                school.map((item, key) => (
+                  <div
+                    className="flex items-center text-sm font-medium"
+                    key={key}
                   >
-                    <MdAddCircleOutline className="text-2xl" />
-                    <span>Nova venda</span>
-                  </ActionButton>
-                </div>
-              </div>
-            ))
+                    <div className="w-3/6 flex gap-2 items-center">
+                      <div className="rounded-full bg-primary-300 p-2 text-white">
+                        <MdSchool />
+                      </div>
+                      <span>{item.name}</span>
+                    </div>
+                    <div className="w-1/6">{item.category}</div>
+                    <div className="w-2/6 flex gap-2">
+                      <ActionButton extraCSS="w-full">
+                        <MdWarehouse className="text-2xl" />
+                        <span onClick={() => handleOnOpenStock()}>
+                          Ver estoque
+                        </span>
+                      </ActionButton>
+                      <ActionButton
+                        bgColor="bg-green-400 hover:bg-green-500"
+                        extraCSS="w-full"
+                      >
+                        <MdAddCircleOutline className="text-2xl" />
+                        <span>Nova venda</span>
+                      </ActionButton>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <span className="text-sm text-gray-300">
+                  Carregando escolas...
+                </span>
+              )}
+            </div>
           ) : (
-            <span className="text-sm text-gray-300">Carregando escolas...</span>
+            <div className="flex flex-col gap-2">
+              {companies ? (
+                companies.map((item, key) => (
+                  <div
+                    className="flex items-center text-sm font-medium"
+                    key={key}
+                  >
+                    <div className="w-3/6 flex gap-2 items-center">
+                      <div className="rounded-full bg-primary-300 p-2 text-white">
+                        <MdBusiness />
+                      </div>
+                      <span>{item.name}</span>
+                    </div>
+                    <div className="w-1/6">{item.category}</div>
+                    <div className="w-2/6 flex gap-2">
+                      <ActionButton extraCSS="w-full">
+                        <MdWarehouse className="text-2xl" />
+                        <span onClick={() => handleOnOpenStock()}>
+                          Ver estoque
+                        </span>
+                      </ActionButton>
+                      <ActionButton
+                        bgColor="bg-green-400 hover:bg-green-500"
+                        extraCSS="w-full"
+                      >
+                        <MdAddCircleOutline className="text-2xl" />
+                        <span>Nova venda</span>
+                      </ActionButton>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <span className="text-sm text-gray-300">
+                  Carregando empresas...
+                </span>
+              )}
+            </div>
           )}
         </div>
       </div>

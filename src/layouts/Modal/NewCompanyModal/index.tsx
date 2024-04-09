@@ -14,6 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Company, School } from "../../../types/global.type";
 import { Link } from "react-router-dom";
+import { createSchool } from "../../../services/school.service";
 
 const NewCompanyModal = () => {
   const [isASchool, setIsASchool] = useState(true);
@@ -92,11 +93,18 @@ const NewCompanyModal = () => {
     cel: z.string(),
   });
 
-  const submitNewSchool = (data: School) => {
-    console.log("Funcionou Escola!");
+  const submitNewSchool = async (data: School) => {
+    try {
+      const res = await createSchool(data);
+      console.log(res);
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
   };
+
   const submitNewCompany = (data: Company) => {
-    console.log("Funcionou Empresa!");
+    console.log(data);
   };
 
   const {
