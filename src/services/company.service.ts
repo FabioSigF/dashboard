@@ -11,11 +11,12 @@ export function getAllCompanies() {
 }
 
 export function createCompany(data: Company) {
+  console.log(data);
   const body = {
     name: data.name,
     cnpj: data.cnpj,
+    clothing: data.clothing,
     category: data.category,
-    sizes: data.sizes.split(","),
     tel: data.tel,
     cel: data.cel
   };
@@ -26,9 +27,9 @@ export function createCompany(data: Company) {
 }
 
 export function getCompanyById(id: string) {
-  const res = axios.get<Company>(`${baseURL}/company/${id}`);
-
-  console.log(res);
+  const res = axios.
+    get<Company>(`${baseURL}/company/${id}`)
+    .then((res) => res.data);
   return res;
 }
 

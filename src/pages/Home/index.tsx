@@ -1,4 +1,3 @@
-import React from "react";
 import { FaShippingFast } from "react-icons/fa";
 import { IoShirtOutline } from "react-icons/io5";
 import {
@@ -225,7 +224,7 @@ const Home = () => {
       <div className="grid grid-cols-4 gap-4">
         {cards.map((item, key) => (
           <div
-            className="px-4 py-4 rounded-md border border-gray-300-p flex gap-4 items-center"
+            className="shadow-primary p-containerWBoxShadow rounded-lg flex gap-4 items-center"
             key={key}
           >
             <div
@@ -242,7 +241,7 @@ const Home = () => {
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <div className="p-6 border border-gray-300-p rounded-md">
+        <div className="shadow-primary p-containerWBoxShadow rounded-lg">
           <div className="flex justify-between items-start">
             <div className="flex flex-col gap-2 mb-8">
               <h2 className="text-xl font-medium">Agenda</h2>
@@ -281,7 +280,7 @@ const Home = () => {
             ))) : (<span className="text-gray-400 text-center">Não há compromissos ainda...</span>)}
           </div>
         </div>
-        <div className="p-6 border border-gray-300-p rounded-md">
+        <div className="shadow-primary p-containerWBoxShadow rounded-lg">
           <div className="flex flex-col gap-2 mb-8">
             <h2 className="text-xl font-medium">Vendas Recentes</h2>
             <p className="text-gray-400 text-sm">Últimas Vendas Realizadas</p>

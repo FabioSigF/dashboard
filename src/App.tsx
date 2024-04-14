@@ -8,7 +8,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Business from "./pages/Business";
 import ItemSell from "./pages/Business/ItemSell";
-import NewCompanyModal from "./layouts/Modal/NewCompanyModal";
+import CreateCompanyModal from "./layouts/Modal/CreateCompanyModal";
 import StockModal from "./layouts/Modal/StockModal";
 import Schedule from "./pages/Schedule";
 
@@ -18,14 +18,14 @@ const App = () => {
     <div>
       <Router>
         <Sidebar />
-        <NewCompanyModal />
+        <CreateCompanyModal />
         <StockModal />
         <div className={`relative ${isOpen ? "ml-[280px]" : "ml-[80px]"}`}>
           <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/business" element={<Business />} />
-            <Route path="/business/item" element={<ItemSell />} />
+            <Route path="/business/sell/:id" element={<ItemSell />} />
             <Route path="/schedule" element={<Schedule />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />

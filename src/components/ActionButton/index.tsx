@@ -5,17 +5,36 @@ type Props = {
   bgColor?: string;
   color?: string;
   extraCSS?: string;
+  disabled?: boolean;
+  action: () => void;
+  type?: "button" | "submit" | "reset";
 };
 
-const ActionButton = ({ children, bgColor, color, extraCSS }: Props) => {
+const ActionButton = ({
+  children,
+  bgColor,
+  color,
+  extraCSS,
+  disabled,
+  type,
+  action,
+}: Props) => {
   return (
     <button
-      type="submit"
-      className={`flex items-center gap-4 py-2 px-4 rounded-md cursor-pointer transition text-sm shadow-primary
+      type={type ? type : "submit"}
+      className={`flex items-center gap-4 py-2 px-4 rounded-md  transition text-sm shadow-primary
       ${color ? color : "text-white"}
-      ${bgColor ? bgColor : "bg-primary-300 hover:bg-primary-400"}
       ${extraCSS && extraCSS}
+      ${
+        disabled
+          ? "cursor-not-allowed bg-gray-300 hover:bg-gray-400"
+          : `${
+              bgColor ? bgColor : "bg-primary-300 hover:bg-primary-400"
+            } cursor-pointer`
+      }
       `}
+      onClick={() => action()}
+      disabled={disabled}
     >
       {children}
     </button>

@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 //TYPES
-import { Breadcrumb, Company, School } from "../../types/global.type";
+import { Breadcrumb, Company } from "../../types/global.type";
 
 //ICONS
 import {
   MdAddCircleOutline,
   MdBusiness,
-  MdSchool,
   MdSearch,
   MdWarehouse,
 } from "react-icons/md";
@@ -21,7 +20,6 @@ import ActionButton from "../../components/ActionButton";
 import { onOpen as onOpenNewCompanyModal } from "../../redux/newCompanyModal/slice";
 import { onOpen as onOpenStockModal } from "../../redux/stockModal/slice";
 import { useAppDispatch } from "../../redux/store";
-import { getAllSchools } from "../../services/school.service";
 import { getAllCompanies } from "../../services/company.service";
 
 const Business = () => {
@@ -36,8 +34,6 @@ const Business = () => {
     },
   ];
 
-  const [sectionSchoolActive, setSectionSchoolActive] = useState(true);
-
   const navigate = useNavigate();
 
   const handleOnSearch = (e: React.FormEvent<HTMLFormElement>) => {
@@ -48,7 +44,6 @@ const Business = () => {
 
   const handleOnAddCompany = () => {
     dispatch(onOpenNewCompanyModal());
-    navigate("?q=add-school");
   };
 
   const handleOnOpenStock = () => {
@@ -57,26 +52,14 @@ const Business = () => {
 
   const [companies, setCompanies] = useState<Company[]>();
 
-  const [school, setSchool] = useState<School[]>();
-
-  const getSchools = async () => {
-    const res = await getAllSchools();
-    console.log(res);
-    if (res != null) {
-      setSchool(res);
-    }
-  };
-
   const getCompanies = async () => {
     const res = await getAllCompanies();
-    console.log(res);
     if (res != null) {
       setCompanies(res);
     }
   };
 
   useEffect(() => {
-    getSchools();
     getCompanies();
   }, []);
 
@@ -101,113 +84,49 @@ const Business = () => {
       </div>
       <div className="shadow-primary p-containerWBoxShadow rounded-lg">
         <div className="flex items-center pb-4 mb-4 border-b border-gray-300">
-          <div className="w-3/6">
-            <div
-              className={`w-min flex gap-6 relative px-3 transition bg-gray-50 rounded-md py-2 before:absolute before:w-[45%] before:bg-primary-300 before:h-full before:rounded-md before:top-0 before:left-0 before:transition-all ${
-                sectionSchoolActive
-                  ? "before:translate-x-0"
-                  : "before:translate-x-[80%] before:w-[55%]"
-              }`}
-            >
-              <span
-                className={`relative cursor-pointer ${
-                  sectionSchoolActive ? "text-white" : ""
-                }`}
-                onClick={() => setSectionSchoolActive(true)}
-              >
-                Escola
-              </span>
-              <span
-                className={`relative cursor-pointer ${
-                  sectionSchoolActive ? "" : "text-white"
-                }`}
-                onClick={() => setSectionSchoolActive(false)}
-              >
-                Empresa
-              </span>
-            </div>
-          </div>
+          <span className="w-3/6">Empresa</span>
           <span className="w-1/6">Tipo</span>
           <span className="w-2/6">Ação</span>
         </div>
         <div>
-          {sectionSchoolActive ? (
-            <div className="flex flex-col gap-2">
-              {school ? (
-                school.map((item, key) => (
-                  <div
-                    className="flex items-center text-sm font-medium"
-                    key={key}
-                  >
-                    <div className="w-3/6 flex gap-2 items-center">
-                      <div className="rounded-full bg-primary-300 p-2 text-white">
-                        <MdSchool />
-                      </div>
-                      <span>{item.name}</span>
+          <div className="flex flex-col gap-2">
+            {companies ? (
+              companies.map((item, key) => (
+                <div
+                  className="flex items-center text-sm font-medium"
+                  key={key}
+                >
+                  <div className="w-3/6 flex gap-2 items-center">
+                    <div className="rounded-full bg-primary-300 p-2 text-white">
+                      <MdBusiness />
                     </div>
-                    <div className="w-1/6">{item.category}</div>
-                    <div className="w-2/6 flex gap-2">
-                      <ActionButton extraCSS="w-full">
-                        <MdWarehouse className="text-2xl" />
-                        <span onClick={() => handleOnOpenStock()}>
-                          Ver estoque
-                        </span>
-                      </ActionButton>
-                      <ActionButton
-                        bgColor="bg-green-400 hover:bg-green-500"
-                        extraCSS="w-full"
-                      >
-                        <MdAddCircleOutline className="text-2xl" />
-                        <span>Nova venda</span>
-                      </ActionButton>
-                    </div>
+                    <span>{item.name}</span>
                   </div>
-                ))
-              ) : (
-                <span className="text-sm text-gray-300">
-                  Carregando escolas...
-                </span>
-              )}
-            </div>
-          ) : (
-            <div className="flex flex-col gap-2">
-              {companies ? (
-                companies.map((item, key) => (
-                  <div
-                    className="flex items-center text-sm font-medium"
-                    key={key}
-                  >
-                    <div className="w-3/6 flex gap-2 items-center">
-                      <div className="rounded-full bg-primary-300 p-2 text-white">
-                        <MdBusiness />
-                      </div>
-                      <span>{item.name}</span>
-                    </div>
-                    <div className="w-1/6">{item.category}</div>
-                    <div className="w-2/6 flex gap-2">
-                      <ActionButton extraCSS="w-full">
-                        <MdWarehouse className="text-2xl" />
-                        <span onClick={() => handleOnOpenStock()}>
-                          Ver estoque
-                        </span>
-                      </ActionButton>
-                      <ActionButton
-                        bgColor="bg-green-400 hover:bg-green-500"
-                        extraCSS="w-full"
-                      >
-                        <MdAddCircleOutline className="text-2xl" />
-                        <span>Nova venda</span>
-                      </ActionButton>
-                    </div>
+                  <div className="w-1/6">{item.category}</div>
+                  <div className="w-2/6 flex gap-2">
+                    <ActionButton extraCSS="w-full" action={handleOnOpenStock}>
+                      <MdWarehouse className="text-2xl" />
+                      <span>Ver estoque</span>
+                    </ActionButton>
+                    <ActionButton
+                      bgColor="bg-green-400 hover:bg-green-500"
+                      extraCSS="w-full"
+                      action={() => {
+                        navigate(`sell/${item._id}`)
+                      }}
+                    >
+                      <MdAddCircleOutline className="text-2xl" />
+                      <span>Nova venda</span>
+                    </ActionButton>
                   </div>
-                ))
-              ) : (
-                <span className="text-sm text-gray-300">
-                  Carregando empresas...
-                </span>
-              )}
-            </div>
-          )}
+                </div>
+              ))
+            ) : (
+              <span className="text-sm text-gray-300">
+                Carregando empresas...
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </div>
