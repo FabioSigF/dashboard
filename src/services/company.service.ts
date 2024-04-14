@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Company } from "../types/global.type";
 
-const baseURL = "https://dashboardbackend-p4f0.onrender.com";
+const baseURL = import.meta.env.BASE_URL;
 
 export function getAllCompanies() {
   const response = axios
@@ -35,7 +35,5 @@ export function getCompanyById(id: string) {
 
 export function deleteCompanyById(id: string) {
   const res = axios.delete(`${baseURL}/company/${id}`);
-
-  console.log(res);
   return res;
 }
