@@ -1,6 +1,9 @@
+//REACT
 import React from "react";
 import ReactDOM from "react-dom/client";
+//COMPONENT
 import App from "./App.tsx";
+//REDUX
 import { Provider } from "react-redux";
 import store from "./redux/store.ts";
 

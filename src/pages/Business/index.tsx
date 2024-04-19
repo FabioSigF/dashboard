@@ -78,9 +78,12 @@ const Business = () => {
             placeholder="Digite o nome da instituição..."
           />
         </form>
-        <div onClick={() => handleOnAddCompany()}>
-          <Button type="button">Adicionar Instituição</Button>
-        </div>
+        <ActionButton
+          action={() => handleOnAddCompany()}
+          extraCSS="py-4 font-medium"
+        >
+          Adicionar Instituição
+        </ActionButton>
       </div>
       <div className="shadow-primary p-containerWBoxShadow rounded-lg">
         <div className="flex items-center pb-4 mb-4 border-b border-gray-300">
@@ -112,7 +115,7 @@ const Business = () => {
                       bgColor="bg-green-400 hover:bg-green-500"
                       extraCSS="w-full"
                       action={() => {
-                        navigate(`sell/${item._id}`)
+                        navigate(`sell/${item._id}`);
                       }}
                     >
                       <MdAddCircleOutline className="text-2xl" />

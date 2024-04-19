@@ -1,7 +1,8 @@
 import axios from "axios";
 import { Stock } from "../types/global.type";
+import config from "../config";
 
-const baseURL = import.meta.env.BASE_URL;
+const baseURL = config.apiURL;
 
 export const getAllStock = () => {
   const res = axios.get(`${baseURL}/stock`).then((res) => res.data);

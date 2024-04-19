@@ -12,8 +12,8 @@ export type Schedule = {
   _id?: string;
   title: string;
   type: string;
-  appointmentDate: Date;
-  isDone: boolean;
+  appointmentDate: string;
+  isDone?: boolean;
 }
 
 export type Sellings = {
@@ -41,8 +41,8 @@ export type Breadcrumb = {
 export type Uniform = {
   _id?: string;
   name: string;
-  sizes: [string];
-  colors: [string];
+  sizes: [string] | string;
+  colors: [string] | string;
   price: number;
 };
 

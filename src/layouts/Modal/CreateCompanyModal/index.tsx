@@ -242,7 +242,7 @@ const CreateCompanyModal = () => {
         </div>
         <Button type="submit">Adicionar Item</Button>
       </div>
-    </form>
+    </form> 
   );
 
   const registerBody = (

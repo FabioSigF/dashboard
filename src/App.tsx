@@ -11,15 +11,33 @@ import ItemSell from "./pages/Business/ItemSell";
 import CreateCompanyModal from "./layouts/Modal/CreateCompanyModal";
 import StockModal from "./layouts/Modal/StockModal";
 import Schedule from "./pages/Schedule";
+import ScheduleModal from "./layouts/Modal/ScheduleModal";
+
+//TOASTIFY
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   const { isOpen } = useAppSelector((state) => state.sidebar);
   return (
     <div>
       <Router>
+        <ToastContainer
+          position="bottom-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
         <Sidebar />
         <CreateCompanyModal />
         <StockModal />
+        <ScheduleModal />
         <div className={`relative ${isOpen ? "ml-[280px]" : "ml-[80px]"}`}>
           <Navbar />
           <Routes>

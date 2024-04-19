@@ -22,9 +22,10 @@ const ActionButton = ({
   return (
     <button
       type={type ? type : "submit"}
-      className={`flex items-center gap-4 py-2 px-4 rounded-md  transition text-sm shadow-primary
-      ${color ? color : "text-white"}
+      className={`
+      flex items-center gap-4 py-2 px-4 rounded-md  transition shadow-primary
       ${extraCSS && extraCSS}
+      ${color ? color : "text-white"}
       ${
         disabled
           ? "cursor-not-allowed bg-gray-300 hover:bg-gray-400"

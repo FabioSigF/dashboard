@@ -1,9 +1,11 @@
 import axios from "axios";
 import { Company } from "../types/global.type";
+import config from "../config";
 
-const baseURL = import.meta.env.BASE_URL;
+const baseURL = config.apiURL;
 
 export function getAllCompanies() {
+  console.log(baseURL);
   const response = axios
     .get<Company[]>(`${baseURL}/company`)
     .then((res) => res.data);

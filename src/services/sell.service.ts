@@ -1,7 +1,8 @@
 import axios from "axios";
 import { Sellings } from "../types/global.type";
+import config from "../config";
 
-const baseURL = import.meta.env.BASE_URL;
+const baseURL = config.apiURL;
 
 export const getAllSellings = () => {
   const res = axios.get<Sellings[]>(`${baseURL}/sell`).then((res) => res.data);
