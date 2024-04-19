@@ -201,67 +201,121 @@ const Schedule = ({ isAWidget }: Props) => {
         )}
         <div className="flex flex-col gap-2">
           {compromissos ? (
-            compromissos.map((item, key) => (
-              <div
-                className={`flex items-center ${item.isDone && "opacity-50"}`}
-                key={key}
-              >
-                <div
-                  className={`${
-                    isAWidget ? "w-4/6" : "w-3/6"
-                  } flex gap-4 items-center text-sm`}
-                >
+            !isAWidget ? (
+              compromissos
+                .sort((a, b) => {
+                  // Ordena por data
+                  const dateA = new Date(a.appointmentDate);
+                  const dateB = new Date(b.appointmentDate);
+                  if (dateA < dateB) return -1;
+                  if (dateA > dateB) return 1;
+                  return 0;
+                })
+                .sort((a, b) => {
+                  // Move os compromissos marcados como concluídos para o final
+                  if (a.isDone && !b.isDone) return 1;
+                  if (!a.isDone && b.isDone) return -1;
+                  return 0;
+                })
+                .map((item, key) => (
                   <div
-                    className={`rounded-md ${handleIconTypeBgColorConfig(
-                      item.type
-                    )} text-white w-[40px] h-[40px] flex items-center justify-center`}
-                  >
-                    {handleIconTypeConfig(item.type)}
-                  </div>
-                  <div
-                    className={`flex flex-col font-medium ${
-                      item.isDone && "line-through"
+                    className={`flex items-center ${
+                      item.isDone && "opacity-50"
                     }`}
+                    key={key}
                   >
-                    <span>{item.title}</span>
-                  </div>
-                </div>
-                <div className="w-1/6 text-sm">{item.type}</div>
-                <div className="w-1/6 text-sm">
-                  {mostraData(item.appointmentDate)}
-                </div>
+                    <div className="w-3/6 flex gap-4 items-center text-sm">
+                      <div
+                        className={`rounded-md ${handleIconTypeBgColorConfig(
+                          item.type
+                        )} text-white w-[40px] h-[40px] flex items-center justify-center`}
+                      >
+                        {handleIconTypeConfig(item.type)}
+                      </div>
+                      <div
+                        className={`flex flex-col font-medium ${
+                          item.isDone && "line-through"
+                        }`}
+                      >
+                        <span>{item.title}</span>
+                      </div>
+                    </div>
+                    <div className="w-1/6 text-sm">{item.type}</div>
+                    <div className="w-1/6 text-sm">
+                      {mostraData(item.appointmentDate)}
+                    </div>
 
-                {!isAWidget && (
-                  <div className="w-1/6 text-sm flex items-center gap-2">
-                    <div
-                      className="text-xl cursor-pointer hover:text-black-600-p"
-                      onClick={() => handleOnUpdateAppointment(item)}
-                    >
-                      <FiEdit />
-                    </div>
-                    <div
-                      className="text-xl cursor-pointer hover:text-black-600-p"
-                      onClick={() =>
-                        handleDeleteAppointment(item._id ? item._id : "")
-                      }
-                    >
-                      <FiTrash2 />
-                    </div>
-                    <div
-                      className="text-xl cursor-pointer hover:text-black-600-p"
-                      onClick={() =>
-                        handleCompleteAppointment(
-                          item._id ? item._id : "",
-                          item.isDone ? true : false
-                        )
-                      }
-                    >
-                      {item.isDone ? <FiCheckSquare /> : <FiSquare />}
+                    <div className="w-1/6 text-sm flex items-center gap-2">
+                      <div
+                        className="text-xl cursor-pointer hover:text-black-600-p"
+                        onClick={() => handleOnUpdateAppointment(item)}
+                      >
+                        <FiEdit />
+                      </div>
+                      <div
+                        className="text-xl cursor-pointer hover:text-black-600-p"
+                        onClick={() =>
+                          handleDeleteAppointment(item._id ? item._id : "")
+                        }
+                      >
+                        <FiTrash2 />
+                      </div>
+                      <div
+                        className="text-xl cursor-pointer hover:text-black-600-p"
+                        onClick={() =>
+                          handleCompleteAppointment(
+                            item._id ? item._id : "",
+                            item.isDone ? true : false
+                          )
+                        }
+                      >
+                        {item.isDone ? <FiCheckSquare /> : <FiSquare />}
+                      </div>
                     </div>
                   </div>
-                )}
-              </div>
-            ))
+                ))
+            ) : (
+              compromissos
+                .filter((item) => !item.isDone)
+                .slice(0, 5)
+                .sort((a, b) => {
+                  // Ordena por data
+                  const dateA = new Date(a.appointmentDate);
+                  const dateB = new Date(b.appointmentDate);
+                  if (dateA < dateB) return -1;
+                  if (dateA > dateB) return 1;
+                  return 0;
+                })
+                .map((item, key) => (
+                  <div
+                    className={`flex items-center ${
+                      item.isDone && "opacity-50"
+                    }`}
+                    key={key}
+                  >
+                    <div className="w-4/6 flex gap-4 items-center text-sm">
+                      <div
+                        className={`rounded-md ${handleIconTypeBgColorConfig(
+                          item.type
+                        )} text-white w-[40px] h-[40px] flex items-center justify-center`}
+                      >
+                        {handleIconTypeConfig(item.type)}
+                      </div>
+                      <div
+                        className={`flex flex-col font-medium ${
+                          item.isDone && "line-through"
+                        }`}
+                      >
+                        <span>{item.title}</span>
+                      </div>
+                    </div>
+                    <div className="w-1/6 text-sm">{item.type}</div>
+                    <div className="w-1/6 text-sm">
+                      {mostraData(item.appointmentDate)}
+                    </div>
+                  </div>
+                ))
+            )
           ) : (
             <span className="text-gray-400 text-center">
               Não há compromissos ainda...

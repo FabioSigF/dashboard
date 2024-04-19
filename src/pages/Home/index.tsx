@@ -1,7 +1,5 @@
-import { FaShippingFast } from "react-icons/fa";
 import { IoShirtOutline } from "react-icons/io5";
 import {
-  MdGroup,
   MdOutlineCreditCard,
   MdOutlinePerson,
   MdOutlineShoppingBag,
@@ -58,19 +56,6 @@ const Home = () => {
           : dataTempo.getMonth()
       }/${dataTempo.getFullYear()}`;
     }
-  }
-
-  function mostraData(tempo: string) {
-    const date = new Date(tempo);
-    return `${date.getDate()}/${
-      date.getMonth() < 10 ? `0${date.getMonth()}` : date.getMonth()
-    }/${date.getFullYear()}`;
-  }
-
-  function mostrarHorario(tempo: string) {
-    const date = new Date(tempo);
-
-    return `${date.getHours()}:${date.getMinutes()}`;
   }
 
   const vendasRecentes = [
@@ -177,48 +162,6 @@ const Home = () => {
     },
   ];
 
-  const compromissos = [
-    {
-      title: "Vender no Metta",
-      type: "sell",
-      icon: <MdOutlineShoppingBag />,
-      bgColor: "bg-green-400",
-      date: "2024-03-11T22:45:56.053+00:00",
-      isDone: false,
-    },
-    {
-      title: "Comprar Tecido",
-      type: "buy",
-      icon: <MdOutlineCreditCard />,
-      bgColor: "bg-red-500",
-      date: "2024-03-11T22:45:56.053+00:00",
-      isDone: false,
-    },
-    {
-      title: "Entregar Uniforme ABC Escola",
-      type: "order",
-      icon: <FaShippingFast />,
-      bgColor: "bg-yellow-600",
-      date: "2024-03-11T22:45:56.053+00:00",
-      isDone: false,
-    },
-    {
-      title: "Reunião com Empresa",
-      type: "meeting",
-      icon: <MdGroup />,
-      bgColor: "bg-blue-300",
-      date: "2024-03-11T22:45:56.053+00:00",
-      isDone: false,
-    },
-    {
-      title: "Entrar em contato com fornecedor",
-      type: "contact",
-      icon: <MdGroup />,
-      bgColor: "bg-gray-400",
-      date: "2024-03-11T22:45:56.053+00:00",
-      isDone: false,
-    },
-  ];
   return (
     <div className="mx-6 my-6">
       <div className="grid grid-cols-4 gap-4">
