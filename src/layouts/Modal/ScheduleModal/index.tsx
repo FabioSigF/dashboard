@@ -79,11 +79,11 @@ const ScheduleModal = () => {
       await createAppointment(data);
       handleOnClose();
       dispatch(onToggleAddedSuccessfully());
+      reset();
     } catch (error) {
       console.log(error);
       toast.error("Ocorreu um erro ao criar o compromisso...");
     }
-    return;
   };
 
   const updateAppointment = async (data: Schedule) => {
@@ -92,6 +92,7 @@ const ScheduleModal = () => {
       handleOnClose();
       dispatch(onToggleUpdate({}));
       dispatch(onToggleUpdatedSuccessfully());
+      reset();
     } catch (error) {
       console.log(error);
       toast.error("Ocorreu um erro ao atualizar o compromisso...");
@@ -140,7 +141,7 @@ const ScheduleModal = () => {
               <option value="">Selecione...</option>
               <option value="Venda">Venda</option>
               <option value="Compra">Compra</option>
-              <option value="Entrega de Pedido">Entrega de Pedido</option>
+              <option value="Entrega">Entrega</option>
               <option value="Reunião">Reunião</option>
               <option value="Contato">Contato</option>
               <option value="Outros">Outros</option>

@@ -25,7 +25,10 @@ import {
 import { toast } from "react-toastify";
 import { FaShippingFast } from "react-icons/fa";
 
-const Schedule = () => {
+type Props = {
+  isAWidget?: boolean;
+};
+const Schedule = ({ isAWidget }: Props) => {
   const { addedSuccessfully, updatedSuccessfully } = useAppSelector(
     (state) => state.schedule
   );
@@ -38,14 +41,14 @@ const Schedule = () => {
         return "bg-green-400";
       case "Compra":
         return "bg-red-500";
-      case "Entrega de Pedido":
-        return "bg-green-400";
+      case "Entrega":
+        return "bg-yellow-400";
       case "Reunião":
-        return "bg-green-400";
+        return "bg-blue-400";
       case "Contato":
-        return "bg-green-400";
+        return "bg-cyan-400";
       case "Outros":
-        return "bg-green-400";
+        return "bg-gray-400";
     }
   };
 
@@ -55,7 +58,7 @@ const Schedule = () => {
         return <MdOutlineShoppingBag />;
       case "Compra":
         return <MdOutlineCreditCard />;
-      case "Entrega de Pedido":
+      case "Entrega":
         return <FaShippingFast />;
       case "Reunião":
         return <MdGroup />;
@@ -153,24 +156,49 @@ const Schedule = () => {
   }, [updatedSuccessfully]);
 
   return (
-    <div className="mx-6 my-6">
-      <div className="flex justify-between items-start mb-12">
-        <PageTitle title="Agenda" breadcrumb={breadcrumb} />
-        <ActionButton
-          bgColor="bg-green-400 hover:bg-green-500"
-          action={handleOnCreateAppointment}
-        >
-          <MdAddCircleOutline className="text-2xl" />
-          <span>Novo Compromisso</span>
-        </ActionButton>
-      </div>
-      <div className="shadow-primary p-containerWBoxShadow rounded-lg">
-        <div className="flex items-center pb-4 mb-4 border-b">
-          <span className="w-4/6 font-bold">Compromisso</span>
-          <span className="w-1/6 font-bold">Categoria</span>
-          <span className="w-1/6 font-bold">Data</span>
-          <span className="w-1/6 font-bold">Ação</span>
+    <div className={`${!isAWidget && "mx-6 my-6"}`}>
+      {!isAWidget && (
+        <div className="flex justify-between items-start mb-12">
+          <PageTitle title="Agenda" breadcrumb={breadcrumb} />
+          <ActionButton
+            bgColor="bg-green-400 hover:bg-green-500"
+            action={handleOnCreateAppointment}
+          >
+            <MdAddCircleOutline className="text-2xl" />
+            <span>Novo Compromisso</span>
+          </ActionButton>
         </div>
+      )}
+      <div className="shadow-primary p-containerWBoxShadow rounded-lg">
+        {!isAWidget ? (
+          <div className="flex items-center pb-4 mb-4 border-b">
+            <span className="w-3/6 font-bold">Compromisso</span>
+            <span className="w-1/6 font-bold">Categoria</span>
+            <span className="w-1/6 font-bold">Data</span>
+            <span className="w-1/6 font-bold">Ação</span>
+          </div>
+        ) : (
+          <>
+            <div className="flex justify-between items-center">
+              <div className="flex flex-col gap-2 mb-8">
+                <h2 className="text-xl font-medium">Agenda</h2>
+                <p className="text-gray-400 text-sm">Próximos Compromissos</p>
+              </div>
+              <ActionButton
+                bgColor="bg-green-400 hover:bg-green-500"
+                action={handleOnCreateAppointment}
+              >
+                <MdAddCircleOutline className="text-2xl" />
+                <span>Novo Compromisso</span>
+              </ActionButton>
+            </div>
+            <div className="flex items-center pb-4 mb-4 border-b">
+              <span className="w-4/6 font-bold">Compromisso</span>
+              <span className="w-1/6 font-bold">Categoria</span>
+              <span className="w-1/6 font-bold">Data</span>
+            </div>
+          </>
+        )}
         <div className="flex flex-col gap-2">
           {compromissos ? (
             compromissos.map((item, key) => (
@@ -178,7 +206,11 @@ const Schedule = () => {
                 className={`flex items-center ${item.isDone && "opacity-50"}`}
                 key={key}
               >
-                <div className="w-4/6 flex gap-4 items-center">
+                <div
+                  className={`${
+                    isAWidget ? "w-4/6" : "w-3/6"
+                  } flex gap-4 items-center text-sm`}
+                >
                   <div
                     className={`rounded-md ${handleIconTypeBgColorConfig(
                       item.type
@@ -187,7 +219,9 @@ const Schedule = () => {
                     {handleIconTypeConfig(item.type)}
                   </div>
                   <div
-                    className={`flex flex-col ${item.isDone && "line-through"}`}
+                    className={`flex flex-col font-medium ${
+                      item.isDone && "line-through"
+                    }`}
                   >
                     <span>{item.title}</span>
                   </div>
@@ -196,33 +230,36 @@ const Schedule = () => {
                 <div className="w-1/6 text-sm">
                   {mostraData(item.appointmentDate)}
                 </div>
-                <div className="w-1/6 text-sm flex items-center gap-2">
-                  <div
-                    className="text-xl cursor-pointer hover:text-black-600-p"
-                    onClick={() => handleOnUpdateAppointment(item)}
-                  >
-                    <FiEdit />
+
+                {!isAWidget && (
+                  <div className="w-1/6 text-sm flex items-center gap-2">
+                    <div
+                      className="text-xl cursor-pointer hover:text-black-600-p"
+                      onClick={() => handleOnUpdateAppointment(item)}
+                    >
+                      <FiEdit />
+                    </div>
+                    <div
+                      className="text-xl cursor-pointer hover:text-black-600-p"
+                      onClick={() =>
+                        handleDeleteAppointment(item._id ? item._id : "")
+                      }
+                    >
+                      <FiTrash2 />
+                    </div>
+                    <div
+                      className="text-xl cursor-pointer hover:text-black-600-p"
+                      onClick={() =>
+                        handleCompleteAppointment(
+                          item._id ? item._id : "",
+                          item.isDone ? true : false
+                        )
+                      }
+                    >
+                      {item.isDone ? <FiCheckSquare /> : <FiSquare />}
+                    </div>
                   </div>
-                  <div
-                    className="text-xl cursor-pointer hover:text-black-600-p"
-                    onClick={() =>
-                      handleDeleteAppointment(item._id ? item._id : "")
-                    }
-                  >
-                    <FiTrash2 />
-                  </div>
-                  <div
-                    className="text-xl cursor-pointer hover:text-black-600-p"
-                    onClick={() =>
-                      handleCompleteAppointment(
-                        item._id ? item._id : "",
-                        item.isDone ? true : false
-                      )
-                    }
-                  >
-                    {item.isDone ? <FiCheckSquare /> : <FiSquare />}
-                  </div>
-                </div>
+                )}
               </div>
             ))
           ) : (

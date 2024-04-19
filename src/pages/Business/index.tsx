@@ -13,7 +13,6 @@ import {
 
 //COMPONENTS
 import PageTitle from "../../components/PageTitle";
-import Button from "../../components/Button";
 import ActionButton from "../../components/ActionButton";
 
 //REDUX
