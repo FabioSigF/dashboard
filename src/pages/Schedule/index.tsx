@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import {
   MdAddCircleOutline,
   MdGroup,
-  MdOutlineCalendarMonth,
   MdOutlineCreditCard,
   MdOutlineShoppingBag,
 } from "react-icons/md";
@@ -14,16 +13,22 @@ import { useAppDispatch, useAppSelector } from "../../redux/store";
 import {
   onOpen,
   onToggleAddedSuccessfully,
+  onToggleUpdate,
+  onToggleUpdatedSuccessfully,
 } from "../../redux/scheduleModal/slice";
 import {
+  checkScheduleItem,
   deleteScheduleItem,
   getAllSchedule,
+  uncheckScheduleItem,
 } from "../../services/schedule.service";
 import { toast } from "react-toastify";
 import { FaShippingFast } from "react-icons/fa";
 
 const Schedule = () => {
-  const { addedSuccessfully } = useAppSelector((state) => state.schedule);
+  const { addedSuccessfully, updatedSuccessfully } = useAppSelector(
+    (state) => state.schedule
+  );
 
   const [compromissos, setCompromissos] = useState<ScheduleType[]>();
 
@@ -96,8 +101,36 @@ const Schedule = () => {
       toast.success("Compromisso deletado com sucesso!");
       getSchedule();
     } catch (error) {
+      console.log(error);
       toast.error("Ocorreu um erro ao excluir o compromisso...");
     }
+  };
+
+  const handleCompleteAppointment = async (id: string, status: boolean) => {
+    try {
+      if (status) {
+        await uncheckScheduleItem(id);
+      } else {
+        await checkScheduleItem(id);
+      }
+      getSchedule();
+    } catch (error) {
+      console.log(error);
+      toast.error("Ocorreu um erro ao tentar completar o compromisso...");
+    }
+  };
+
+  const handleOnUpdateAppointment = async (item: ScheduleType) => {
+    console.log();
+    dispatch(
+      onToggleUpdate({
+        id: item._id,
+        title: item.title,
+        type: item.type,
+        date: new Date(item.appointmentDate).toISOString(),
+      })
+    );
+    dispatch(onOpen());
   };
   useEffect(() => {
     getSchedule();
@@ -110,6 +143,14 @@ const Schedule = () => {
       dispatch(onToggleAddedSuccessfully());
     }
   }, [addedSuccessfully]);
+
+  useEffect(() => {
+    if (updatedSuccessfully) {
+      getSchedule();
+      toast.success("Compromisso atualizado com sucesso!");
+      dispatch(onToggleUpdatedSuccessfully());
+    }
+  }, [updatedSuccessfully]);
 
   return (
     <div className="mx-6 my-6">
@@ -133,14 +174,21 @@ const Schedule = () => {
         <div className="flex flex-col gap-2">
           {compromissos ? (
             compromissos.map((item, key) => (
-              <div className="flex items-center" key={key}>
+              <div
+                className={`flex items-center ${item.isDone && "opacity-50"}`}
+                key={key}
+              >
                 <div className="w-4/6 flex gap-4 items-center">
                   <div
-                    className={`rounded-md ${handleIconTypeBgColorConfig(item.type)} text-white w-[40px] h-[40px] flex items-center justify-center`}
+                    className={`rounded-md ${handleIconTypeBgColorConfig(
+                      item.type
+                    )} text-white w-[40px] h-[40px] flex items-center justify-center`}
                   >
                     {handleIconTypeConfig(item.type)}
                   </div>
-                  <div className="flex flex-col">
+                  <div
+                    className={`flex flex-col ${item.isDone && "line-through"}`}
+                  >
                     <span>{item.title}</span>
                   </div>
                 </div>
@@ -149,7 +197,10 @@ const Schedule = () => {
                   {mostraData(item.appointmentDate)}
                 </div>
                 <div className="w-1/6 text-sm flex items-center gap-2">
-                  <div className="text-xl cursor-pointer hover:text-black-600-p">
+                  <div
+                    className="text-xl cursor-pointer hover:text-black-600-p"
+                    onClick={() => handleOnUpdateAppointment(item)}
+                  >
                     <FiEdit />
                   </div>
                   <div
@@ -160,7 +211,15 @@ const Schedule = () => {
                   >
                     <FiTrash2 />
                   </div>
-                  <div className="text-xl cursor-pointer hover:text-black-600-p">
+                  <div
+                    className="text-xl cursor-pointer hover:text-black-600-p"
+                    onClick={() =>
+                      handleCompleteAppointment(
+                        item._id ? item._id : "",
+                        item.isDone ? true : false
+                      )
+                    }
+                  >
                     {item.isDone ? <FiCheckSquare /> : <FiSquare />}
                   </div>
                 </div>

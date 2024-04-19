@@ -4,6 +4,8 @@ import { useAppDispatch, useAppSelector } from "../../../redux/store";
 import {
   onClose,
   onToggleAddedSuccessfully,
+  onToggleUpdate,
+  onToggleUpdatedSuccessfully,
 } from "../../../redux/scheduleModal/slice";
 //ZOD + REACT HOOK FORMS
 import { ZodType, z } from "zod";
@@ -14,18 +16,34 @@ import Modal from "..";
 import ErrorInput from "../../../components/ErrorInput";
 import Button from "../../../components/Button";
 //SERVICE
-import { createAppointment } from "../../../services/schedule.service";
+import { createAppointment, updateScheduleItem } from "../../../services/schedule.service";
 //TYPES
 import { Schedule } from "../../../types/global.type";
 import { toast } from "react-toastify";
+import { useEffect } from "react";
 
 const ScheduleModal = () => {
-  const { isOpen } = useAppSelector((state) => state.schedule);
+  const {
+    isOpen,
+    isAnUpdate,
+    updatedId,
+    updatedTitle,
+    updatedType,
+    updatedDate,
+  } = useAppSelector((state) => state.schedule);
 
   const dispatch = useAppDispatch();
 
   const handleOnClose = () => {
     dispatch(onClose());
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Adiciona um zero à esquerda, se necessário
+    const day = String(date.getUTCDate()).padStart(2, '0'); // Adiciona um zero à esquerda, se necessário
+    return `${year}-${month}-${day}`;
   };
 
   const schemaSchedule: ZodType<Schedule> = z.object({
@@ -43,7 +61,18 @@ const ScheduleModal = () => {
     register,
     handleSubmit,
     formState: { errors },
+    reset, //reseta valores default dos inputs
   } = useForm<Schedule>({ resolver: zodResolver(schemaSchedule) });
+
+  //Atualiza valores default dos inputs toda vez que eles são modificados pelo Redux. Garante que o formulário abra com os valores atualizados.
+  useEffect(() => {
+    reset({
+      title: updatedTitle,
+      _id: updatedId,
+      type: updatedType,
+      appointmentDate: formatDate(updatedDate),
+    });
+  }, [updatedId, updatedTitle, updatedType, updatedDate]);
 
   const submitNewAppointment = async (data: Schedule) => {
     try {
@@ -57,13 +86,31 @@ const ScheduleModal = () => {
     return;
   };
 
+  const updateAppointment = async (data: Schedule) => {
+    try {
+      await updateScheduleItem({...data, _id: updatedId});
+      handleOnClose();
+      dispatch(onToggleUpdate({}));
+      dispatch(onToggleUpdatedSuccessfully());
+    } catch (error) {
+      console.log(error);
+      toast.error("Ocorreu um erro ao atualizar o compromisso...");
+    }
+  };
+
   //STYLE
   const inputStyle =
     "border border-gray-200 text-gray-900 text-sm rounded-md focus:ring-gray-600 focus:border-gray-400 block w-full p-2.5 bg-gray-50 outline-none";
 
   const body = (
     <div className="flex flex-col gap-2">
-      <form onSubmit={handleSubmit(submitNewAppointment)}>
+      <form
+        onSubmit={
+          isAnUpdate
+            ? handleSubmit(updateAppointment)
+            : handleSubmit(submitNewAppointment)
+        }
+      >
         <div className="flex flex-col gap-4 justify-center">
           <div>
             <label
@@ -120,14 +167,16 @@ const ScheduleModal = () => {
               />
             )}
           </div>
-          <Button type="submit">Novo Compromisso</Button>
+          <Button type="submit">
+            {isAnUpdate ? "Atualizar Compromisso" : "Novo Compromisso"}
+          </Button>
         </div>
       </form>
     </div>
   );
   return (
     <Modal
-      title="Criar Novo Compromisso"
+      title={isAnUpdate ? "Atualizar Compromisso" : "Criar Novo Compromisso"}
       body={body}
       onClose={() => handleOnClose()}
       isOpen={isOpen}
