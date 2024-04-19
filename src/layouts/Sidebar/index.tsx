@@ -1,6 +1,7 @@
 import {
   MdCalendarMonth,
   MdInsertChartOutlined,
+  MdOutlineAttachMoney,
   MdOutlineDashboard,
   MdOutlinePhone,
   MdOutlineWarehouse,
@@ -35,6 +36,11 @@ const Sidebar = () => {
           title: "Comércio",
           icon: <MdOutlineWarehouse />,
           link: "/business",
+        },
+        {
+          title: "Vendas",
+          icon: <MdOutlineAttachMoney/>,
+          link: "/sellings",
         },
         {
           title: "Agenda",

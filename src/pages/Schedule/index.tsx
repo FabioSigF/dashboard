@@ -24,6 +24,7 @@ import {
 } from "../../services/schedule.service";
 import { toast } from "react-toastify";
 import { FaShippingFast } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   isAWidget?: boolean;
@@ -34,6 +35,8 @@ const Schedule = ({ isAWidget }: Props) => {
   );
 
   const [compromissos, setCompromissos] = useState<ScheduleType[]>();
+
+  const navigate = useNavigate();
 
   const handleIconTypeBgColorConfig = (type: string) => {
     switch (type) {
@@ -117,6 +120,8 @@ const Schedule = ({ isAWidget }: Props) => {
         await checkScheduleItem(id);
       }
       getSchedule();
+      dispatch(onToggleUpdate({}));
+      dispatch(onToggleUpdatedSuccessfully());
     } catch (error) {
       console.log(error);
       toast.error("Ocorreu um erro ao tentar completar o compromisso...");
@@ -135,6 +140,7 @@ const Schedule = ({ isAWidget }: Props) => {
     );
     dispatch(onOpen());
   };
+
   useEffect(() => {
     getSchedule();
   }, []);
@@ -181,7 +187,12 @@ const Schedule = ({ isAWidget }: Props) => {
           <>
             <div className="flex justify-between items-center">
               <div className="flex flex-col gap-2 mb-8">
-                <h2 className="text-xl font-medium">Agenda</h2>
+                <h2
+                  className="text-xl font-medium cursor-pointer"
+                  onClick={() => navigate("/schedule")}
+                >
+                  Agenda
+                </h2>
                 <p className="text-gray-400 text-sm">Próximos Compromissos</p>
               </div>
               <ActionButton
@@ -225,6 +236,7 @@ const Schedule = ({ isAWidget }: Props) => {
                     key={key}
                   >
                     <div className="w-3/6 flex gap-4 items-center text-sm">
+                      {/*ICON*/}
                       <div
                         className={`rounded-md ${handleIconTypeBgColorConfig(
                           item.type
@@ -232,12 +244,17 @@ const Schedule = ({ isAWidget }: Props) => {
                       >
                         {handleIconTypeConfig(item.type)}
                       </div>
+                      {/*TITLE*/}
                       <div
                         className={`flex flex-col font-medium ${
                           item.isDone && "line-through"
                         }`}
                       >
-                        <span>{item.title}</span>
+                        <span>
+                          {item.title.length > 28
+                            ? `${item.title.slice(0, 27)}...`
+                            : item.title}
+                        </span>
                       </div>
                     </div>
                     <div className="w-1/6 text-sm">{item.type}</div>
@@ -294,6 +311,7 @@ const Schedule = ({ isAWidget }: Props) => {
                     key={key}
                   >
                     <div className="w-4/6 flex gap-4 items-center text-sm">
+                      {/*ICON */}
                       <div
                         className={`rounded-md ${handleIconTypeBgColorConfig(
                           item.type
@@ -301,12 +319,17 @@ const Schedule = ({ isAWidget }: Props) => {
                       >
                         {handleIconTypeConfig(item.type)}
                       </div>
+                      {/*TITLE*/}
                       <div
                         className={`flex flex-col font-medium ${
                           item.isDone && "line-through"
                         }`}
                       >
-                        <span>{item.title}</span>
+                        <span>
+                          {item.title.length > 28
+                            ? `${item.title.slice(0, 27)}...`
+                            : item.title}
+                        </span>
                       </div>
                     </div>
                     <div className="w-1/6 text-sm">{item.type}</div>

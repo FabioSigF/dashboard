@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Sellings } from "../types/global.type";
+import { Sell, Sellings } from "../types/global.type";
 import config from "../config";
 
 const baseURL = config.apiURL;
@@ -9,7 +9,7 @@ export const getAllSellings = () => {
   return res;
 };
 
-export const addSell = (data: Sellings) => {
+export const addSell = (data: Sell) => {
   const res = axios.post(`${baseURL}/sell`, data);
   return res;
 };

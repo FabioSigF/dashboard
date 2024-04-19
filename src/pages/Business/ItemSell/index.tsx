@@ -15,6 +15,8 @@ import { useParams } from "react-router-dom";
 //COMPONENTS
 import PageTitle from "../../../components/PageTitle";
 import ActionButton from "../../../components/ActionButton";
+import { addSell } from "../../../services/sell.service";
+import { toast } from "react-toastify";
 
 const ItemSell = () => {
   const { id } = useParams();
@@ -71,8 +73,26 @@ const ItemSell = () => {
     setCart(newCart);
   };
 
-  const handleFinishSell = () => {
-    console.log("Venda finalizada!");
+  const handleFinishSell = async () => {
+    try {
+      const res = await addSell({
+        //Remove o id de cada item, para que seja colocado um Object Id no db
+        items: cart.map((item) => {
+          const {_id, ...rest} = item;
+          return rest;
+        }),
+        total_price: cartTotalPrice,
+        //@ts-expect-error Company nunca será null
+        company: company!._id,
+      });
+
+      setCart([]);
+      setCartTotalPrice(0);
+      toast.success("Venda realizada com sucesso!");
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   //Sempre que atualizar o tipo do uniforme, as cores disponíveis mudam
@@ -91,6 +111,7 @@ const ItemSell = () => {
         (item) => item.name === tipoInput
       );
       if (cloth !== undefined && cloth.colors.length > 0) {
+        //@ts-expect-error Tipagem de colors
         setCoresDisponiveisSelect(cloth.colors);
       } else {
         setCorInput("Padrão");
@@ -120,9 +141,11 @@ const ItemSell = () => {
       if (company?.clothing && company.clothing.length > 0) {
         const firstCloth = company.clothing[0];
         if (firstCloth.sizes.length > 0) {
+          //@ts-expect-error Tipagem de sizes
           setTamanhos(firstCloth.sizes);
         }
         if (firstCloth.colors.length > 0) {
+          //@ts-expect-error Tipagem de colors
           setCoresDisponiveisSelect(firstCloth.colors);
         }
       }
@@ -359,7 +382,9 @@ const ItemSell = () => {
           </div>
         </div>
       ) : (
-        <div className="shadow-primary p-containerWBoxShadow text-gray-900 text-sm rounded-md focus:ring-gray-500 focus:border-gray-500 block w-full outline-none disabled:cursor-not-allowed">Carregando...</div>
+        <div className="shadow-primary p-containerWBoxShadow text-gray-900 text-sm rounded-md focus:ring-gray-500 focus:border-gray-500 block w-full outline-none disabled:cursor-not-allowed">
+          Carregando...
+        </div>
       )}
     </div>
   );

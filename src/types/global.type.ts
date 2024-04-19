@@ -16,12 +16,33 @@ export type Schedule = {
   isDone?: boolean;
 }
 
+//Retono de todas as vendas
 export type Sellings = {
   _id?: string;
-  items: Array<Uniform>;
+  items: Array<SellItem>;
   total_price: number;
-  school: string; //ID School
+  company_id: string;
+  company_name: string;
+  company_category: string;
   date: Date;
+}
+
+//Enviar venda
+export type Sell = {
+  id?: string;
+  items: Array<SellItem>;
+  total_price: number;
+  company: string;
+}
+
+export type SellItem = {
+  _id?: number;
+  name: string;
+  size: string;
+  amount: number;
+  color: string;
+  price_unit: number;
+  total_price: number;
 }
 
 export type Stock = {
@@ -45,16 +66,6 @@ export type Uniform = {
   colors: [string] | string;
   price: number;
 };
-
-export type SellItem = {
-  _id?: number;
-  name: string;
-  size: string;
-  amount: number;
-  color: string;
-  price_unit: number;
-  total_price: number;
-}
 
 export type User = {
   _id?: string;

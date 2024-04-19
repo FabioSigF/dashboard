@@ -5,6 +5,7 @@ import {
   MdOutlineShoppingBag,
 } from "react-icons/md";
 import Schedule from "../Schedule";
+import Sellings from "../Sellings";
 
 const Home = () => {
   const cards = [
@@ -185,49 +186,7 @@ const Home = () => {
 
       <div className="grid grid-cols-2 gap-4">
         <Schedule isAWidget />
-        <div className="shadow-primary p-containerWBoxShadow rounded-lg">
-          <div className="flex flex-col gap-2 mb-8">
-            <h2 className="text-xl font-medium">Vendas Recentes</h2>
-            <p className="text-gray-400 text-sm">Últimas Vendas Realizadas</p>
-          </div>
-          <div className="flex items-center pb-4 mb-4 border-b border-gray-300">
-            <span className="w-4/6 text-sm font-bold">Produto</span>
-            <span className="w-1/6 text-sm font-bold">Preço</span>
-            <span className="w-1/6 text-sm font-bold">Data</span>
-          </div>
-          <div className="flex flex-col gap-2">
-            {vendasRecentes.map((sell, key) => (
-              <div className="flex items-center" key={key}>
-                <div className="w-4/6 flex gap-4 items-center">
-                  <div
-                    className={`rounded-md ${
-                      key % 2 === 0 ? "bg-green-400" : "bg-secondary-300"
-                    } text-white w-[40px] h-[40px] flex items-center justify-center`}
-                  >
-                    <IoShirtOutline />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-sm font-medium">{sell.company}</span>
-                    <span className="text-gray-400 text-xs overflow-hidden">
-                      {sell.items.map((item, key) => (
-                        <span key={key}>
-                          {item.amount} {item.item}
-                          {key !== sell.items.length - 1 && ", "}
-                        </span>
-                      ))}
-                    </span>
-                  </div>
-                </div>
-                <div className="w-1/6 text-sm font-bold">
-                  R$ {sell.totalPrice}
-                </div>
-                <div className="w-1/6 text-sm font-bold">
-                  {calculaTempo(sell.data)}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        <Sellings isAWidget />
       </div>
     </div>
   );
