@@ -14,10 +14,10 @@ import { useForm } from "react-hook-form";
 import { Company, Uniform } from "../../../types/global.type";
 import { createCompany } from "../../../services/company.service";
 import { useState } from "react";
-import { FiEdit, FiTrash2 } from "react-icons/fi";
+import Clothing from "./Clothing";
 
 const CreateCompanyModal = () => {
-  const [clothing, setClothing] = useState<Uniform[]>([{name: "name", colors: "colors", sizes:"size", price:38}]);
+  const [clothing, setClothing] = useState<Uniform[]>([]);
   const [isOnCompanyPage, setIsOnCompanyPage] = useState(true);
 
   const { isOpen } = useAppSelector((state) => state.newcompany);
@@ -28,9 +28,17 @@ const CreateCompanyModal = () => {
     dispatch(onClose());
   };
 
-  const handleRemoveClothing = () => {
-    return;
-  }
+  const submitNewCompany = async (data: Company) => {
+    try {
+      data.clothing = clothing;
+      const res = await createCompany(data);
+      console.log(res);
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   //REACT HOOK FORMS + ZOD
   const schemaCompany: ZodType<Company> = z.object({
     name: z
@@ -51,206 +59,23 @@ const CreateCompanyModal = () => {
     cel: z.string(),
   });
 
-  const schemaClothing: ZodType<Uniform> = z.object({
-    name: z
-      .string()
-      .min(1, "O nome não pode ser vazio.")
-      .transform((item) => {
-        return item
-          .trim()
-          .split(" ")
-          .map((word) => {
-            return word[0].toLocaleUpperCase().concat(word.substring(1));
-          })
-          .join(" ");
-      }),
-    sizes: z
-      .string()
-      .min(1, "É necessário ao menos 1 tamanho.")
-      .transform((tam) => {
-        return tam
-          .split(",")
-          .map((word) => word.trim().toLocaleUpperCase())
-          .join(",");
-      }),
-    colors: z
-      .string()
-      .min(1, "É necessário ao menos uma cor.")
-      .transform((cor) => {
-        return cor
-          .split(",")
-          .map((word) => {
-            return word[0].toLocaleUpperCase().concat(word.substring(1)).trim();
-          })
-          .join(",");
-      }),
-    price: z.number().min(1, "É necessário inserir o preço do uniforme."),
-  });
-
-  const submitNewCompany = async (data: Company) => {
-    try {
-      console.log(data);
-      const res = await createCompany(data);
-      console.log(res);
-      return res;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const submitNewCloth = () => {
-    return;
-  };
-
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<Company>({ resolver: zodResolver(schemaCompany) });
 
-  const {
-    register: registerClothing,
-    handleSubmit: handleSubmitClothing,
-    formState: { errors: errorsClothing },
-  } = useForm<Uniform>({ resolver: zodResolver(schemaClothing) });
 
   //STYLE
   const inputStyle =
     "border border-gray-200 text-gray-900 text-sm rounded-md focus:ring-gray-600 focus:border-gray-400 block w-full p-2.5 bg-gray-50 outline-none";
 
-  const registerClothingBody = (
-    <form onSubmit={handleSubmitClothing(submitNewCloth)}>
-      <div className="flex flex-col gap-4 justify-center">
-        <div>
-          <label
-            htmlFor="name"
-            className="block mb-2 text-sm font-medium text-gray-900"
-          >
-            Nome da peça
-          </label>
-          <input
-            type="text"
-            className={`${inputStyle}`}
-            placeholder="Camisa Manga Longa..."
-            {...registerClothing("name")}
-          />
-          {errorsClothing.name && (
-            <ErrorInput message={errorsClothing.name.message?.toString()} />
-          )}
-        </div>
-        <div>
-          <label className="block mb-2 text-sm font-medium text-gray-900">
-            Cores
-          </label>
-          <textarea
-            rows={2}
-            className={`${inputStyle}`}
-            placeholder="Azul Marinho, Amarelo, Roxo..."
-            {...registerClothing("colors")}
-          ></textarea>
-          {errorsClothing.colors && (
-            <ErrorInput message={errorsClothing.colors.message?.toString()} />
-          )}
-        </div>
-        <div>
-          <label className="block mb-2 text-sm font-medium text-gray-900">
-            Tamanhos
-          </label>
-          <textarea
-            rows={2}
-            className={`${inputStyle}`}
-            placeholder="12, 14, P, M, G"
-            {...registerClothing("sizes")}
-          ></textarea>
-          {errorsClothing.sizes && (
-            <ErrorInput message={errorsClothing.sizes.message?.toString()} />
-          )}
-        </div>
-        <div>
-          <label className="block mb-2 text-sm font-medium text-gray-900">
-            Preço
-          </label>
-          <textarea
-            rows={2}
-            className={`${inputStyle}`}
-            placeholder="39.90"
-            {...registerClothing("price")}
-          ></textarea>
-          {errorsClothing.price && (
-            <ErrorInput message={errorsClothing.price.message?.toString()} />
-          )}
-        </div>
-        <div>
-          <label className="block mb-2 text-sm font-medium text-gray-900">
-            Vestuário
-          </label>
-          <div className={`${inputStyle}`}>
-            {clothing ? (
-               <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-               <thead className="uppercase">
-                 <tr className="">
-                   <th scope="col" className="px-6">
-                     Nome Peça
-                   </th>
-                   <th scope="col" className="px-6">
-                     Cores
-                   </th>
-                   <th scope="col" className="px-6">
-                     Tamanhos
-                   </th>
-                   <th scope="col" className="px-6">
-                     Preço
-                   </th>
-                   <th scope="col" className="px-6">
-                     Ação
-                   </th>
-                 </tr>
-               </thead>
-               <tbody>
-                 {clothing.map((item, key) => (
-                   <tr key={key}>
-                     <th
-                       scope="row"
-                       className="px-6 py-4 font-medium whitespace-nowrap"
-                     >
-                       {item.name}
-                     </th>
-                     <td className="px-6 py-4">{item.colors}</td>
-                     <td className="px-6 py-4">{item.sizes}</td>
-                     <td className="px-6 py-4">
-                       R$ {item.price.toFixed(2)}
-                     </td>
-                     <td className="px-6 py-4 flex gap-1">
-                       <div className="text-xl cursor-pointer hover:text-black-600-p">
-                         <FiEdit />
-                       </div>
-                       <div
-                         className="text-xl cursor-pointer hover:text-black-600-p"
-                         onClick={() => handleRemoveClothing()}
-                       >
-                         <FiTrash2 />
-                       </div>
-                     </td>
-                   </tr>
-                 ))}
-               </tbody>
-             </table>
-            ) : (
-              <div>Ainda não foi adicionada nenhuma peça ao vestuário...</div>
-            )}
-          </div>
-        </div>
-        <Button type="submit">Adicionar Item</Button>
-      </div>
-    </form> 
-  );
 
   const registerBody = (
     <form onSubmit={handleSubmit(submitNewCompany)}>
       <div className="flex flex-col gap-4 justify-center">
         <div>
           <label
-            htmlFor="name"
             className="block mb-2 text-sm font-medium text-gray-900"
           >
             Nome
@@ -356,7 +181,7 @@ const CreateCompanyModal = () => {
         className={`w-min flex gap-6 relative px-3 transition bg-gray-50 rounded-md py-2 before:absolute before:w-[50%] before:bg-primary-300 before:h-full before:rounded-md before:top-0 before:left-0 before:transition-all ${
           isOnCompanyPage
             ? "before:translate-x-0"
-            : "before:translate-x-[100%] before:w-[55%]"
+            : "before:translate-x-[100%] before:w-[50%]"
         }`}
       >
         <div
@@ -376,7 +201,7 @@ const CreateCompanyModal = () => {
           Vestuário
         </div>
       </div>
-      {isOnCompanyPage ? registerBody : registerClothingBody}
+      {isOnCompanyPage ? registerBody : <Clothing clothing={clothing} setClothing={setClothing}/>}
     </div>
   );
   return (
