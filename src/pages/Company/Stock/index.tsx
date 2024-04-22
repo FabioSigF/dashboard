@@ -40,7 +40,12 @@ const Stock = ({ company_id }: Props) => {
 
   //State de Edição
   const [amountEdited, setAmountEdited] = useState(0);
-  const [isBeingEdited, setIsBeingEdited] = useState(false);
+  const [isBeingEdited, setIsBeingEdited] = useState("");
+
+  //Warning
+  const [messageStockEmpty, setMessageStockEmpty] = useState(
+    "Essa empresa ainda não possui vendas..."
+  );
 
   const getStock = async () => {
     try {
@@ -69,15 +74,35 @@ const Stock = ({ company_id }: Props) => {
         console.log(error);
         toast.error("Não foi possível atualizar o item do estoque!");
       }
-      setIsBeingEdited(false);
+      setIsBeingEdited("");
       setAmountEdited(item.amount);
       getStock();
     } else {
-      setIsBeingEdited(true);
+      setIsBeingEdited(item._id!);
       setAmountEdited(item.amount);
     }
   };
 
+  const handleOnSearchStock = async () => {
+    try {
+      const res: StockType[] = await getStockByCompany(company_id);
+
+      const filteredStock = res.filter(
+        (item) =>
+          item.item === typeSearched &&
+          item.color === colorSearched &&
+          item.size === sizeSearched
+      );
+
+      setStock(filteredStock);
+
+      if (filteredStock.length === 0) {
+        setMessageStockEmpty("Item não encontrado no estoque...");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     getStock();
   }, [company_id]);
@@ -86,7 +111,7 @@ const Stock = ({ company_id }: Props) => {
 
   const tbody = (
     <tbody>
-      {stock ? (
+      {stock && stock.length ? (
         stock.map((item, key) => (
           <tr className="bg-white border-b  hover:bg-gray-50" key={key}>
             <th
@@ -100,11 +125,11 @@ const Stock = ({ company_id }: Props) => {
             <td className="px-6 py-4">
               <input
                 type="number"
-                value={isBeingEdited ? amountEdited : item.amount}
+                value={isBeingEdited === item._id ? amountEdited : item.amount}
                 className={`${
-                  isBeingEdited ? "border" : "border-transparent"
+                  isBeingEdited === item._id ? "border" : "border-transparent"
                 } bg-transparent rounded-lg w-16 h-8 pl-2`}
-                disabled={isBeingEdited ? false : true}
+                disabled={isBeingEdited === item._id ? false : true}
                 onChange={(e) => setAmountEdited(Number(e.target.value))}
               />
             </td>
@@ -113,13 +138,15 @@ const Stock = ({ company_id }: Props) => {
                 className="text-xl cursor-pointer hover:text-black-600-p"
                 onClick={() => handleUpdateItemStock(item)}
               >
-                {isBeingEdited ? <FiCheck /> : <FiEdit />}
+                {isBeingEdited === item._id ? <FiCheck /> : <FiEdit />}
               </div>
             </td>
           </tr>
         ))
       ) : (
-        <span>Essa empresa ainda não possui vendas...</span>
+        <tr>
+          <td className="py-5">{messageStockEmpty}</td>
+        </tr>
       )}
     </tbody>
   );
@@ -181,6 +208,10 @@ const Stock = ({ company_id }: Props) => {
 
     getCompany();
   }, [company_id]);
+
+  useEffect(() => {
+    console.log(typeSearched);
+  }, [typeSearched])
 
   return (
     <div>
@@ -260,7 +291,14 @@ const Stock = ({ company_id }: Props) => {
               <ActionButton
                 bgColor="bg-green-400 hover:bg-green-500"
                 extraCSS="w-full py-3.5"
-                action={() => {}}
+                disabled={
+                  typeSearched === "Selecione..." || typeSearched === ""
+                    ? true
+                    : false
+                }
+                action={() => {
+                  handleOnSearchStock();
+                }}
                 type="button"
               >
                 <MdAddCircleOutline className="text-2xl" />
