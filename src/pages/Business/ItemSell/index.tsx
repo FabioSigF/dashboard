@@ -78,7 +78,7 @@ const ItemSell = () => {
       const res = await addSell({
         //Remove o id de cada item, para que seja colocado um Object Id no db
         items: cart.map((item) => {
-          const {_id, ...rest} = item;
+          const { _id, ...rest } = item;
           return rest;
         }),
         total_price: cartTotalPrice,
@@ -91,6 +91,8 @@ const ItemSell = () => {
       toast.success("Venda realizada com sucesso!");
       console.log(res);
     } catch (error) {
+      //@ts-expect-error Erro não pode ser tipado
+      toast.error(error.response.data.message);
       console.log(error);
     }
   };
@@ -137,39 +139,6 @@ const ItemSell = () => {
   }, [tipoInput, company]);
 
   useEffect(() => {
-    const inicializaCoresETamanhos = () => {
-      if (company?.clothing && company.clothing.length > 0) {
-        const firstCloth = company.clothing[0];
-        if (firstCloth.sizes.length > 0) {
-          //@ts-expect-error Tipagem de sizes
-          setTamanhos(firstCloth.sizes);
-        }
-        if (firstCloth.colors.length > 0) {
-          //@ts-expect-error Tipagem de colors
-          setCoresDisponiveisSelect(firstCloth.colors);
-        }
-      }
-    };
-
-    const inicializaInputs = () => {
-      if (company?.clothing && company.clothing.length > 0) {
-        const firstCloth = company.clothing[0];
-        setTipoInput(firstCloth.name);
-        if (firstCloth.sizes.length > 0) {
-          setTamanhoInput(firstCloth.sizes[0]);
-        }
-        setQuantidadeInput(1);
-        if (firstCloth.colors.length > 0) {
-          setCorInput(firstCloth.colors[0]);
-        }
-      }
-    };
-
-    inicializaCoresETamanhos();
-    inicializaInputs();
-  }, [company]);
-
-  useEffect(() => {
     const updateCartPrice = () => {
       setCartTotalPrice(0);
       let price = 0;
@@ -202,8 +171,6 @@ const ItemSell = () => {
     getCompany();
   }, [id]);
 
-  useEffect(() => {}, [company]);
-
   return (
     <div className="mx-6 my-6">
       {company ? (
@@ -222,8 +189,9 @@ const ItemSell = () => {
                 id="item_sell_tipo"
                 className={`${inputStyle}`}
                 value={tipoInput}
-                onChange={(e) => handleUpdateTipoInput(e.target.value)}
+                onChange={(e) => setTipoInput(e.target.value)}
               >
+                <option value="Selecione...">Selecione</option>
                 {company.clothing?.map((item, key) => (
                   <option
                     value={`${item.name ? item.name : "Carregando..."}`}
@@ -286,6 +254,7 @@ const ItemSell = () => {
                 onChange={(e) => setCorInput(e.target.value)}
                 disabled={coresDisponiveisSelect.length > 1 ? false : true}
               >
+                <option value="Selecione...">Selecione</option>
                 {coresDisponiveisSelect.map((item, key) => (
                   <option value={item} key={key}>
                     {item}

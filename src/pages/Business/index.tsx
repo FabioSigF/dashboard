@@ -98,7 +98,7 @@ const Business = () => {
                   className="flex items-center text-sm font-medium"
                   key={key}
                 >
-                  <div className="w-3/6 flex gap-2 items-center">
+                  <div className="w-3/6 flex gap-2 items-center cursor-pointer hover:text-primary-400 transition" onClick={()=>navigate(`company/${item._id}`)}>
                     <div className="rounded-full bg-primary-300 p-2 text-white">
                       <MdBusiness />
                     </div>

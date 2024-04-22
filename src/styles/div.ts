@@ -1,0 +1,1 @@
+export const mainDiv = "shadow-primary p-containerWBoxShadow rounded-lg";

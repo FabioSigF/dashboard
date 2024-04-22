@@ -20,7 +20,7 @@ export function createCompany(data: Company) {
     clothing: data.clothing,
     category: data.category,
     tel: data.tel,
-    cel: data.cel
+    cel: data.cel,
   };
 
   const response = axios.post(`${baseURL}/company`, body);
@@ -28,9 +28,14 @@ export function createCompany(data: Company) {
   return response;
 }
 
+export function updateCompany(data: Company) {
+  const res = axios.patch(`${baseURL}/company/${data._id}`, data);
+  return res;
+}
+
 export function getCompanyById(id: string) {
-  const res = axios.
-    get<Company>(`${baseURL}/company/${id}`)
+  const res = axios
+    .get<Company>(`${baseURL}/company/${id}`)
     .then((res) => res.data);
   return res;
 }

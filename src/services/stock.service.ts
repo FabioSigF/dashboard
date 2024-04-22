@@ -16,6 +16,12 @@ export const getStockByCompany = (id: string) => {
   return res;
 };
 
+export const updateStock = (data: Stock) => {
+  const res = axios.patch(`${baseURL}/stock/${data._id}`, data);
+
+  return res;
+};
+
 export const addStock = (data: Stock) => {
   const res = axios.post(`${baseURL}/stock`, data);
   return res;
@@ -24,4 +30,4 @@ export const addStock = (data: Stock) => {
 export const deleteStockItem = (id: string) => {
   const res = axios.delete(`${baseURL}/stock/${id}`);
   return res;
-}
+};
