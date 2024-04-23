@@ -1,6 +1,6 @@
 //REDUX
 import { useAppDispatch, useAppSelector } from "../../../redux/store";
-import { onClose } from "../../../redux/newCompanyModal/slice";
+import { onClose, onCloseEdit } from "../../../redux/companyModal/slice";
 
 //COMPONENTS
 import Modal from "..";
@@ -12,15 +12,22 @@ import { ZodType, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Company, Uniform } from "../../../types/global.type";
-import { createCompany } from "../../../services/company.service";
-import { useState } from "react";
+import {
+  createCompany,
+  updateCompany,
+} from "../../../services/company.service";
+import { useEffect, useState } from "react";
 import Clothing from "./Clothing";
+import { toast } from "react-toastify";
+import { inputStyle } from "../../../styles/input";
 
-const CreateCompanyModal = () => {
+const CompanyModal = () => {
   const [clothing, setClothing] = useState<Uniform[]>([]);
   const [isOnCompanyPage, setIsOnCompanyPage] = useState(true);
 
-  const { isOpen } = useAppSelector((state) => state.newcompany);
+  const { isOpen, itsAnEdit, editedCompany } = useAppSelector(
+    (state) => state.company
+  );
 
   const dispatch = useAppDispatch();
 
@@ -28,13 +35,74 @@ const CreateCompanyModal = () => {
     dispatch(onClose());
   };
 
+  //Inicia formulário caso seja uma edição
+  useEffect(() => {
+    if (editedCompany) {
+      //@ts-expect-error Não será nulo
+      setClothing(editedCompany.clothing);
+      reset({
+        name: editedCompany.name,
+        cnpj: editedCompany.cnpj,
+        category: editedCompany.category,
+        tel: editedCompany.tel,
+        cel: editedCompany.cel,
+      });
+    }
+  }, [editedCompany]);
+
+  //Reseta formulário sempre que é fechado
+  useEffect(() => {
+    if (!isOpen) {
+      reset({
+        name: "",
+        cnpj: "",
+        category: "",
+        tel: "",
+        cel: "",
+      });
+      dispatch(onCloseEdit());
+      dispatch(onClose());
+      setClothing([]);
+      setIsOnCompanyPage(true);
+    }
+  }, [isOpen]);
+
   const submitNewCompany = async (data: Company) => {
     try {
       data.clothing = clothing;
       const res = await createCompany(data);
-      console.log(res);
       return res;
     } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const editCompany = async (data: Company) => {
+    try {
+      data.clothing = clothing;
+      const res = await updateCompany({
+        _id: editedCompany?._id,
+        name: data.name,
+        cnpj: data.cnpj,
+        category: data.category,
+        tel: data.tel,
+        cel: data.category,
+        clothing: data.clothing,
+      });
+
+      toast.success("Empresa atualizada com sucesso!");
+      reset({
+        name: "",
+        cnpj: "",
+        category: "",
+        tel: "",
+        cel: "",
+      });
+      dispatch(onCloseEdit());
+      dispatch(onClose());
+      return res;
+    } catch (error) {
+      toast.error("Ocorreu um erro ao atualizar a empresa...");
       console.log(error);
     }
   };
@@ -63,21 +131,20 @@ const CreateCompanyModal = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Company>({ resolver: zodResolver(schemaCompany) });
-
-
-  //STYLE
-  const inputStyle =
-    "border border-gray-200 text-gray-900 text-sm rounded-md focus:ring-gray-600 focus:border-gray-400 block w-full p-2.5 bg-gray-50 outline-none";
-
+    reset,
+  } = useForm<Company>({
+    resolver: zodResolver(schemaCompany),
+  });
 
   const registerBody = (
-    <form onSubmit={handleSubmit(submitNewCompany)}>
+    <form
+      onSubmit={
+        itsAnEdit ? handleSubmit(editCompany) : handleSubmit(submitNewCompany)
+      }
+    >
       <div className="flex flex-col gap-4 justify-center">
         <div>
-          <label
-            className="block mb-2 text-sm font-medium text-gray-900"
-          >
+          <label className="block mb-2 text-sm font-medium text-gray-900">
             Nome
           </label>
           <input
@@ -169,7 +236,9 @@ const CreateCompanyModal = () => {
             )}
           </div>
         </div>
-        <Button type="submit">Cadastrar Empresa</Button>
+        <Button type="submit">
+          {itsAnEdit ? "Editar Empresa" : "Cadastrar Empresa"}
+        </Button>
       </div>
     </form>
   );
@@ -201,12 +270,16 @@ const CreateCompanyModal = () => {
           Vestuário
         </div>
       </div>
-      {isOnCompanyPage ? registerBody : <Clothing clothing={clothing} setClothing={setClothing}/>}
+      {isOnCompanyPage ? (
+        registerBody
+      ) : (
+        <Clothing clothing={clothing} setClothing={setClothing} itsAnEdit />
+      )}
     </div>
   );
   return (
     <Modal
-      title="Cadastrar Nova Instituição"
+      title={`${itsAnEdit ? "Editar Empresa" : "Cadastrar Nova Instituição"}`}
       body={body}
       onClose={handleOnClose}
       isOpen={isOpen}
@@ -214,4 +287,4 @@ const CreateCompanyModal = () => {
   );
 };
 
-export default CreateCompanyModal;
+export default CompanyModal;

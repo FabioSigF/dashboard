@@ -8,7 +8,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Business from "./pages/Business";
 import ItemSell from "./pages/Business/ItemSell";
-import CreateCompanyModal from "./layouts/Modal/CreateCompanyModal";
+import CompanyModal from "./layouts/Modal/CompanyModal";
 import StockModal from "./layouts/Modal/StockModal";
 import Schedule from "./pages/Schedule";
 import ScheduleModal from "./layouts/Modal/ScheduleModal";
@@ -37,7 +37,7 @@ const App = () => {
           theme="light"
         />
         <Sidebar />
-        <CreateCompanyModal />
+        <CompanyModal />
         <StockModal />
         <ScheduleModal />
         <div className={`relative ${isOpen ? "ml-[280px]" : "ml-[80px]"}`}>

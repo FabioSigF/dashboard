@@ -7,23 +7,72 @@ import { ZodType, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Uniform } from "../../../../types/global.type";
-import { SetStateAction } from "react";
+import { SetStateAction, useState } from "react";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
+import { toast } from "react-toastify";
 
 type Props = {
-  clothing: Uniform[],
+  clothing: Uniform[];
   setClothing: React.Dispatch<SetStateAction<Uniform[]>>;
+  itsAnEdit?: boolean;
 };
 
-const Clothing = ({ clothing, setClothing }: Props) => {
+const Clothing = ({ clothing, setClothing, itsAnEdit }: Props) => {
+  const [idClothBeingEdited, setIdClothBeingEdited] = useState("");
+
   const inputStyle =
     "border border-gray-200 text-gray-900 text-sm rounded-md focus:ring-gray-600 focus:border-gray-400 block w-full p-2.5 bg-gray-50 outline-none";
 
   const submitNewCloth = (data: Uniform) => {
     //@ts-expect-error data.price é incluído como string e será transformado em float
-    data.price = parseFloat(data.price)
-    setClothing((prev )=>[...prev, data]);
+    data.price = parseFloat(data.price);
+    setClothing((prev) => [...prev, data]);
     return;
+  };
+
+  const handleOnClickOnEditCloth = (item: Uniform) => {
+    reset({
+      name: item.name,
+      //@ts-expect-error item.sizes vem como array mas deve ser transformado em string
+      sizes: item.sizes.join(", "),
+      //@ts-expect-error item.colors vem como array mas deve ser transformado em string
+      colors: item.colors.join(", "),
+      //@ts-expect-error item.price vem como number mas deve ser transformado em string
+      price: item.price.toString(),
+    });
+    if (item._id) setIdClothBeingEdited(item._id);
+  };
+
+  const handleOnEditCloth = (data: Uniform) => {
+    console.log(data);
+    setClothing((prev) => {
+      // Mapeie o array anterior, substituindo o item com o mesmo _id pelo novo item
+      return prev.map((item) => {
+        if (item._id === idClothBeingEdited) {
+          return {
+            _id: item._id,
+            name: data.name,
+            //@ts-expect-error data.price vem como string e deve ser transformado em [string]
+            sizes: data.sizes.split(","),
+            //@ts-expect-error data.colors vem como string e deve ser transformado em [string]
+            colors: data.colors.split(","),
+            //@ts-expect-error data.price vem como string e deve ser transformado em number
+            price: parseFloat(data.price),
+          };
+        } else {
+          return item; // Mantém os itens que não correspondem ao _id do novo item
+        }
+      });
+    });
+
+    reset({
+      name: "",
+      sizes: "",
+      colors: "",
+      price: 0,
+    });
+
+    toast.success("Item do vestuário foi editado com sucesso!");
   };
 
   const handleRemoveClothing = () => {
@@ -71,10 +120,17 @@ const Clothing = ({ clothing, setClothing }: Props) => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<Uniform>({ resolver: zodResolver(schemaClothing) });
 
   return (
-    <form onSubmit={handleSubmit(submitNewCloth)}>
+    <form
+      onSubmit={
+        itsAnEdit
+          ? handleSubmit(handleOnEditCloth)
+          : handleSubmit(submitNewCloth)
+      }
+    >
       <div className="flex flex-col gap-4 justify-center">
         <div>
           <label
@@ -125,7 +181,7 @@ const Clothing = ({ clothing, setClothing }: Props) => {
             Preço
           </label>
           <input
-            type="number"
+            type="text"
             className={`${inputStyle}`}
             placeholder="39.90"
             {...register("price")}
@@ -134,6 +190,9 @@ const Clothing = ({ clothing, setClothing }: Props) => {
             <ErrorInput message={errors.price.message?.toString()} />
           )}
         </div>
+        <Button type="submit">
+          {itsAnEdit ? "Editar Item" : "Adicionar Item"}
+        </Button>
         <div>
           <label className="block mb-2 text-sm font-medium text-gray-900">
             Vestuário
@@ -169,11 +228,34 @@ const Clothing = ({ clothing, setClothing }: Props) => {
                       >
                         {item.name}
                       </th>
-                      <td className="px-6 py-4">{item.colors}</td>
-                      <td className="px-6 py-4">{item.sizes}</td>
+                      <td className="px-6 py-4">
+                        {
+                          //@ts-expect-error Tipo colors é um array
+                          item.colors.map((color, key) => (
+                            <span key={key}>
+                              {color}
+                              {key !== item.colors.length - 1 && ", "}
+                            </span>
+                          ))
+                        }
+                      </td>
+                      <td className="px-6 py-4">
+                        {
+                          //@ts-expect-error Tipo sizes é um array
+                          item.sizes.map((size, key) => (
+                            <span key={key}>
+                              {size}
+                              {key !== item.sizes.length - 1 && ", "}
+                            </span>
+                          ))
+                        }
+                      </td>
                       <td className="px-6 py-4">R$ {item.price.toFixed(2)}</td>
                       <td className="px-6 py-4 flex gap-1">
-                        <div className="text-xl cursor-pointer hover:text-black-600-p">
+                        <div
+                          className="text-xl cursor-pointer hover:text-black-600-p"
+                          onClick={() => handleOnClickOnEditCloth(item)}
+                        >
                           <FiEdit />
                         </div>
                         <div
@@ -192,7 +274,6 @@ const Clothing = ({ clothing, setClothing }: Props) => {
             )}
           </div>
         </div>
-        <Button type="submit">Adicionar Item</Button>
       </div>
     </form>
   );

@@ -16,7 +16,7 @@ import PageTitle from "../../components/PageTitle";
 import ActionButton from "../../components/ActionButton";
 
 //REDUX
-import { onOpen as onOpenNewCompanyModal } from "../../redux/newCompanyModal/slice";
+import { onOpen as onOpenNewCompanyModal } from "../../redux/companyModal/slice";
 import { onOpen as onOpenStockModal } from "../../redux/stockModal/slice";
 import { useAppDispatch } from "../../redux/store";
 import { getAllCompanies } from "../../services/company.service";
