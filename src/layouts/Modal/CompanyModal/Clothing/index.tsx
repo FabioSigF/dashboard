@@ -15,10 +15,9 @@ import { inputStyle } from "../../../../styles/input";
 type Props = {
   clothing: Uniform[];
   setClothing: React.Dispatch<SetStateAction<Uniform[]>>;
-  itsAnEdit?: boolean;
 };
 
-const Clothing = ({ clothing, setClothing, itsAnEdit }: Props) => {
+const Clothing = ({ clothing, setClothing }: Props) => {
   const [idClothBeingEdited, setIdClothBeingEdited] = useState("");
   const [itsAnClothEdit, setItsAnClothEdit] = useState(false);
 

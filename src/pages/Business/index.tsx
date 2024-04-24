@@ -45,8 +45,8 @@ const Business = () => {
     dispatch(onOpenNewCompanyModal());
   };
 
-  const handleOnOpenStock = () => {
-    dispatch(onOpenStockModal());
+  const handleOnOpenStock = (idCompany: string) => {
+    dispatch(onOpenStockModal({ idCompany: idCompany }));
   };
 
   const [companies, setCompanies] = useState<Company[]>();
@@ -98,7 +98,10 @@ const Business = () => {
                   className="flex items-center text-sm font-medium"
                   key={key}
                 >
-                  <div className="w-3/6 flex gap-2 items-center cursor-pointer hover:text-primary-400 transition" onClick={()=>navigate(`company/${item._id}`)}>
+                  <div
+                    className="w-3/6 flex gap-2 items-center cursor-pointer hover:text-primary-400 transition"
+                    onClick={() => navigate(`company/${item._id}`)}
+                  >
                     <div className="rounded-full bg-primary-300 p-2 text-white">
                       <MdBusiness />
                     </div>
@@ -106,7 +109,10 @@ const Business = () => {
                   </div>
                   <div className="w-1/6">{item.category}</div>
                   <div className="w-2/6 flex gap-2">
-                    <ActionButton extraCSS="w-full" action={handleOnOpenStock}>
+                    <ActionButton
+                      extraCSS="w-full"
+                      action={() => handleOnOpenStock(item._id ? item._id : "")}
+                    >
                       <MdWarehouse className="text-2xl" />
                       <span>Ver estoque</span>
                     </ActionButton>

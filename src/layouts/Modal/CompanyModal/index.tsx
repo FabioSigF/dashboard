@@ -273,7 +273,7 @@ const CompanyModal = () => {
       {isOnCompanyPage ? (
         registerBody
       ) : (
-        <Clothing clothing={clothing} setClothing={setClothing} itsAnEdit />
+        <Clothing clothing={clothing} setClothing={setClothing} />
       )}
     </div>
   );

@@ -5,104 +5,76 @@ import Modal from "..";
 import { useAppDispatch, useAppSelector } from "../../../redux/store";
 import { onClose } from "../../../redux/stockModal/slice";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
+import { getStockByCompany } from "../../../services/stock.service";
+import { Stock as StockType } from "../../../types/global.type";
+import { useEffect, useState } from "react";
 
 const Stock = () => {
-  const tableItems = [
-    {
-      item: "Camisa MM",
-      size: "6",
-      color: "Azul Marinho",
-      amount: 5,
-    },
-    {
-      item: "Camisa",
-      size: "P",
-      color: "Branco",
-      amount: 2,
-    },
-    {
-      item: "Bermuda",
-      size: "M",
-      color: "Padrão",
-      amount: 12,
-    },
-    {
-      item: "Camisa MM",
-      size: "5",
-      color: "Azul Marinho",
-      amount: 5,
-    },
-    {
-      item: "Camisa MM",
-      size: "5",
-      color: "Azul Marinho",
-      amount: 5,
-    },
-    {
-      item: "Camisa MM",
-      size: "6",
-      color: "Azul Marinho",
-      amount: 5,
-    },
-    {
-      item: "Camisa",
-      size: "P",
-      color: "Branco",
-      amount: 2,
-    },
-    {
-      item: "Bermuda",
-      size: "M",
-      color: "Padrão",
-      amount: 12,
-    },
-    {
-      item: "Camisa MM",
-      size: "5",
-      color: "Azul Marinho",
-      amount: 5,
-    },
-    {
-      item: "Camisa MM",
-      size: "5",
-      color: "Azul Marinho",
-      amount: 5,
-    },
-  ];
+  const [stock, setStock] = useState<StockType[]>([]);
+
+  const { isOpen } = useAppSelector((state) => state.stock);
+
+  const idCompany = useAppSelector((state) => state.stock.idCompany);
+  const dispatch = useAppDispatch();
+
+  const getStock = async () => {
+    if (idCompany) {
+      try {
+        const res = await getStockByCompany(idCompany);
+        setStock(res);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    getStock();
+  }, [idCompany]);
+
+  const handleOnClose = () => {
+    dispatch(onClose());
+    setStock([]);
+  };
+
   const tableColumns = ["Tipo", "Cor", "Tamanho", "Quantidade", "Ação"];
 
   const tbody = (
     <tbody>
-      {tableItems.map((item, key) => (
-        <tr className="bg-white border-b  hover:bg-gray-50" key={key}>
+      {stock.length > 0 ? (
+        stock.map((item, key) => (
+          <tr className="bg-white border-b  hover:bg-gray-50" key={key}>
+            <th
+              scope="row"
+              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+            >
+              {item.item}
+            </th>
+            <td className="px-6 py-4">{item.color}</td>
+            <td className="px-6 py-4">{item.size}</td>
+            <td className="px-6 py-4">{item.amount}</td>
+            <td className="px-6 py-4 flex gap-1">
+              <div className="text-xl cursor-pointer hover:text-black-600-p">
+                <FiEdit />
+              </div>
+              <div className="text-xl cursor-pointer hover:text-black-600-p">
+                <FiTrash2 />
+              </div>
+            </td>
+          </tr>
+        ))
+      ) : (
+        <tr className="px-6 w-full">
           <th
             scope="row"
-            className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+            className="px-6 py-4"
           >
-            {item.item}
+            Carregando estoque...
           </th>
-          <td className="px-6 py-4">{item.color}</td>
-          <td className="px-6 py-4">{item.size}</td>
-          <td className="px-6 py-4">{item.amount}</td>
-          <td className="px-6 py-4 flex gap-1">
-            <div className="text-xl cursor-pointer hover:text-black-600-p">
-              <FiEdit />
-            </div>
-            <div className="text-xl cursor-pointer hover:text-black-600-p">
-              <FiTrash2 />
-            </div>
-          </td>
         </tr>
-      ))}
+      )}
     </tbody>
   );
-  const { isOpen } = useAppSelector((state) => state.stock);
-
-  const dispatch = useAppDispatch();
-
-  const handleOnClose = () => {
-    dispatch(onClose());
-  };
 
   const body = (
     <div className="w-full">
