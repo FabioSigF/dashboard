@@ -16,6 +16,19 @@ export const getStockByCompany = (id: string) => {
   return res;
 };
 
+export const getStockByAmount = (amount: string) => {
+  const res = axios.get(`${baseURL}/stock/amount/${amount}`).then((res) => res.data);
+
+  return res;
+}
+export const getStockByAmountAndId = (amount: string, id: string) => {
+  const res = axios.get(`${baseURL}/stock/amount/${amount}/id/${id}`).then((res) => res.data);
+
+  return res;
+}
+
+
+
 export const updateStock = (data: Stock) => {
   const res = axios.patch(`${baseURL}/stock/${data._id}`, data);
 

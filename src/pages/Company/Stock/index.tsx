@@ -21,6 +21,7 @@ import { mainDiv } from "../../../styles/div";
 import Table from "../../../components/Table";
 import ActionButton from "../../../components/ActionButton";
 import { toast } from "react-toastify";
+import StockBillboard from "../../../components/StockBillboard";
 
 type Props = {
   company_id: string;
@@ -44,7 +45,7 @@ const Stock = ({ company_id }: Props) => {
 
   //Warning
   const [messageStockEmpty, setMessageStockEmpty] = useState(
-    "Essa empresa ainda não possui vendas..."
+    "Essa empresa ainda não possui itens no estoque..."
   );
 
   const getStock = async () => {
@@ -216,7 +217,10 @@ const Stock = ({ company_id }: Props) => {
   return (
     <div>
       {company ? (
-        <div>
+        <div className="flex flex-col gap-8">
+          <StockBillboard 
+            companyId={company_id}
+          />
           <form className="grid grid-cols-4 gap-4 items-end mb-8">
             <div className="flex flex-col">
               <label
@@ -294,7 +298,7 @@ const Stock = ({ company_id }: Props) => {
                 disabled={
                   typeSearched === "Selecione..." || typeSearched === ""
                     ? true
-                    : false
+                    : false 
                 }
                 action={() => {
                   handleOnSearchStock();
