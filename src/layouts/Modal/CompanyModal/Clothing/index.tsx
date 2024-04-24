@@ -10,6 +10,7 @@ import { Uniform } from "../../../../types/global.type";
 import { SetStateAction, useState } from "react";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { toast } from "react-toastify";
+import { inputStyle } from "../../../../styles/input";
 
 type Props = {
   clothing: Uniform[];
@@ -19,18 +20,33 @@ type Props = {
 
 const Clothing = ({ clothing, setClothing, itsAnEdit }: Props) => {
   const [idClothBeingEdited, setIdClothBeingEdited] = useState("");
-
-  const inputStyle =
-    "border border-gray-200 text-gray-900 text-sm rounded-md focus:ring-gray-600 focus:border-gray-400 block w-full p-2.5 bg-gray-50 outline-none";
+  const [itsAnClothEdit, setItsAnClothEdit] = useState(false);
 
   const submitNewCloth = (data: Uniform) => {
-    //@ts-expect-error data.price é incluído como string e será transformado em float
-    data.price = parseFloat(data.price);
-    setClothing((prev) => [...prev, data]);
+    const newCloth = {
+      name: data.name,
+      //@ts-expect-error data.price vem como string e deve ser transformado em [string]
+      sizes: data.sizes.split(","),
+      //@ts-expect-error data.colors vem como string e deve ser transformado em [string]
+      colors: data.colors.split(","),
+      //@ts-expect-error data.price vem como string e deve ser transformado em number
+      price: parseFloat(data.price),
+    };
+    setClothing((prev) => [...prev, newCloth]);
+
+    reset({
+      name: "",
+      sizes: "",
+      colors: "",
+      price: 0,
+    });
+
+    toast.info("Item foi adicionado ao vestuário!");
     return;
   };
 
   const handleOnClickOnEditCloth = (item: Uniform) => {
+    setItsAnClothEdit(true);
     reset({
       name: item.name,
       //@ts-expect-error item.sizes vem como array mas deve ser transformado em string
@@ -45,6 +61,7 @@ const Clothing = ({ clothing, setClothing, itsAnEdit }: Props) => {
 
   const handleOnEditCloth = (data: Uniform) => {
     console.log(data);
+    setItsAnClothEdit(false);
     setClothing((prev) => {
       // Mapeie o array anterior, substituindo o item com o mesmo _id pelo novo item
       return prev.map((item) => {
@@ -72,7 +89,7 @@ const Clothing = ({ clothing, setClothing, itsAnEdit }: Props) => {
       price: 0,
     });
 
-    toast.success("Item do vestuário foi editado com sucesso!");
+    toast.info("Item do vestuário foi editado!");
   };
 
   const handleRemoveClothing = () => {
@@ -126,7 +143,7 @@ const Clothing = ({ clothing, setClothing, itsAnEdit }: Props) => {
   return (
     <form
       onSubmit={
-        itsAnEdit
+        itsAnClothEdit
           ? handleSubmit(handleOnEditCloth)
           : handleSubmit(submitNewCloth)
       }
@@ -191,7 +208,7 @@ const Clothing = ({ clothing, setClothing, itsAnEdit }: Props) => {
           )}
         </div>
         <Button type="submit">
-          {itsAnEdit ? "Editar Item" : "Adicionar Item"}
+          {itsAnClothEdit ? "Editar Item" : "Adicionar Item"}
         </Button>
         <div>
           <label className="block mb-2 text-sm font-medium text-gray-900">
