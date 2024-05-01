@@ -14,17 +14,31 @@ export const addSell = (data: Sell) => {
   return res;
 };
 
-export const getBySellId = (id: string) => {
+export const findSellByCompanyId = (id: string) => {
   const res = axios.get(`${baseURL}/sell/${id}`).then((res) => res.data);
   return res;
 };
 
-export const getByDate = (initialDate: string, finalDate: string) => {
-  const data = {
-    "date-gte": initialDate,
-    "date-lt": finalDate,
+export const findSellingsByCompanyAndDate = (
+  id: string,
+  initialDate: string,
+  finalDate: string
+) => {
+  const date = {
+    "date_gte": initialDate,
+    "date_lt": finalDate,
   };
-  const res = axios.get(`${baseURL}/sell/bydate`, { params: data });
+
+  const res = axios.get(`${baseURL}/sell/bydate/${id}`, { params: date });
+  return res;
+};
+
+export const findSellByDate = (initialDate: string, finalDate: string) => {
+  const date = {
+    "date_gte": initialDate,
+    "date_lt": finalDate,
+  };
+  const res = axios.get(`${baseURL}/sell/bydate`, { params: date });
   return res;
 };
 

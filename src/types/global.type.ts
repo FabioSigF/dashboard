@@ -33,6 +33,7 @@ export type Sell = {
   items: Array<SellItem>;
   total_price: number;
   company: string;
+  date: string;
 }
 
 export type SellItem = {
@@ -71,4 +72,9 @@ export type User = {
   _id?: string;
   username: string;
   email: string;
+}
+
+export type Chart = {
+  x: string,
+  y: number
 }
