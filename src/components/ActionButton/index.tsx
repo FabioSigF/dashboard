@@ -23,7 +23,7 @@ const ActionButton = ({
     <button
       type={type ? type : "submit"}
       className={`
-      flex items-center gap-4 py-2 px-4 rounded-md  transition shadow-primary
+      flex items-center gap-4 py-2 px-4 rounded-md  transition shadow-primary justify-center
       ${extraCSS && extraCSS}
       ${color ? color : "text-white"}
       ${

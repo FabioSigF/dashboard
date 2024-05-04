@@ -1,3 +1,4 @@
+///React
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -7,25 +8,33 @@ import {
   Company as CompanyType,
   Sell,
 } from "../../types/global.type";
+
+//Services
 import { getCompanyById } from "../../services/company.service";
-import PageTitle from "../../components/PageTitle";
+import { findSellingsByCompanyAndDate } from "../../services/sell.service";
+
+//Components
 import Stock from "./Stock";
+import PageTitle from "../../components/PageTitle";
+import CardWeekSellings from "../../components/Card/CardWeekSellings";
+
+//Icons
 import { FiEdit } from "react-icons/fi";
+
+//Reudx
 import { useAppDispatch } from "../../redux/store";
 import {
   onOpen as onOpenCompanyModal,
   onOpenEdit,
 } from "../../redux/companyModal/slice";
-import { findSellingsByCompanyAndDate } from "../../services/sell.service";
-
-import Chart from "../../components/Chart";
 
 const Company = () => {
   const { id } = useParams();
 
   const [company, setCompany] = useState<CompanyType>();
   const [pageSelected, setPageSelected] = useState("Geral");
-  const [sellings, setSellings] = useState<Sell[]>([]);
+  const [weekSellings, setWeekSellings] = useState<Sell[]>([]);
+  const [monthSellings, setMonthSellings] = useState<Sell[]>([]);
   const dispatch = useAppDispatch();
 
   const breadcrumb: Array<Breadcrumb> = [
@@ -43,6 +52,7 @@ const Company = () => {
     },
   ];
 
+  //Change Selected Page between Geral and Estoque
   const handleChangePage = (value: string) => {
     setPageSelected(value);
   };
@@ -60,6 +70,7 @@ const Company = () => {
     }
   };
 
+  //Format date "YY-MM-DD"
   const formatDate = (date: Date): string => {
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
@@ -67,6 +78,7 @@ const Company = () => {
     return `${year}-${month}-${day}`;
   };
 
+  //Get Sellings in Current Week
   const getSellingsOnWeek = async () => {
     try {
       const today = new Date();
@@ -89,7 +101,32 @@ const Company = () => {
         );
         console.log(res);
         if (res != null) {
-          setSellings(res.data ? res.data : []);
+          setWeekSellings(res.data ? res.data : []);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getSellingsOnMonth = async () => {
+    try {
+      const today = new Date();
+      const firstDayOfCurrentMonth = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        1
+      );
+      const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+      const lastDayOfCurrentMoth = new Date(nextMonth.getTime() - 1);
+      if (id) {
+        const res = await findSellingsByCompanyAndDate(
+          id,
+          formatDate(firstDayOfCurrentMonth),
+          formatDate(lastDayOfCurrentMoth)
+        );
+        if (res != null) {
+          setMonthSellings(res.data ? res.data : []);
         }
       }
     } catch (error) {
@@ -102,10 +139,10 @@ const Company = () => {
     getCompany();
   }, [id, company]);
 
-
-  //Recupera vendas da empresa na semana atual
+  //Recupera vendas da empresa na semana e mês atual
   useEffect(() => {
     getSellingsOnWeek();
+    getSellingsOnMonth();
   }, []);
 
   const handleOnEditCompany = (company: CompanyType) => {
@@ -160,11 +197,10 @@ const Company = () => {
           <div>
             {pageSelected === "Geral" && (
               <div>
-                <h2 className="text-xl font-medium cursor-pointer">Geral</h2>
-                {sellings.length > 0 ? (
-                  <div>
-                    <Chart sellings={sellings} />
-                  </div>
+                {weekSellings.length > 0 ? (
+                  <CardWeekSellings 
+                    weekSellings={weekSellings}
+                  />
                 ) : (
                   <div>Carregando vendas...</div>
                 )}

@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { Chart as ChartType, Sell } from "../../types/global.type";
+import { useEffect, useState } from "react";
+import { Chart, Sell } from "../../types/global.type";
 import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 
 type Props = {
   sellings: Sell[];
+  width: number;
+  height: number;
 };
 
-const Chart = ({ sellings }: Props) => {
-  const [seriesData, setSeriesData] = useState<ChartType[]>([]);
+const ChartLastWeekSellings = ({ sellings, width, height }: Props) => {
+  const [seriesData, setSeriesData] = useState<Chart[]>([]);
   const daysOfWeek = [
     "Domingo",
     "Segunda",
@@ -21,23 +23,20 @@ const Chart = ({ sellings }: Props) => {
 
   useEffect(() => {
     const separateSalesByDate = (sellings: Sell[]) => {
-      // Inicializar o mapeamento de vendas por dia da semana com contagem 0 para todos os dias
       const salesByDayOfWeek: { [dayString: string]: number } = {};
       daysOfWeek.forEach((day) => {
         salesByDayOfWeek[day] = 0;
       });
 
-      // Mapear os valores das vendas para os dias da semana
       sellings.forEach((selling) => {
         const date = new Date(selling.date);
         const dayString = getDayString(date);
         salesByDayOfWeek[dayString]++;
       });
 
-      // Criar array com os dados para o gráfico
       const newSeriesData = daysOfWeek.map((day) => ({
         x: day,
-        y: salesByDayOfWeek[day] || 0, // Definir contagem como 0 se não houver vendas para o dia
+        y: salesByDayOfWeek[day] || 0,
       }));
       setSeriesData(newSeriesData);
     };
@@ -59,7 +58,10 @@ const Chart = ({ sellings }: Props) => {
       newDate.setDate(currentDate.getDate() - currentDate.getDay() + i);
       const formattedDate = `${newDate.getDate()}/${newDate.getMonth() + 1}`;
       const dayOfWeek = newDate.getDay();
-      const dayString = `${formattedDate} - ${daysOfWeek[dayOfWeek]}`;
+      const dayString = `${formattedDate} - ${daysOfWeek[dayOfWeek].slice(
+        0,
+        3
+      )}`;
       result.push(dayString);
     }
 
@@ -137,11 +139,11 @@ const Chart = ({ sellings }: Props) => {
     <ReactApexChart
       options={options}
       series={series}
-      width={540}
-      height={400}
+      width={width}
+      height={height}
       type="bar"
     />
   );
 };
 
-export default Chart;
+export default ChartLastWeekSellings;
