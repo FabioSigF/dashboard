@@ -9,8 +9,13 @@ type Props = {
   height: number;
 };
 
-const ChartLastWeekSellings = ({ sellings, width, height }: Props) => {
+const ChartWeekSellings = ({
+  width,
+  height,
+  sellings
+}: Props) => {
   const [seriesData, setSeriesData] = useState<Chart[]>([]);
+
   const daysOfWeek = [
     "Domingo",
     "Segunda",
@@ -21,6 +26,7 @@ const ChartLastWeekSellings = ({ sellings, width, height }: Props) => {
     "Sábado",
   ];
 
+  //Agrega vendas por data na semana
   useEffect(() => {
     const separateSalesByDate = (sellings: Sell[]) => {
       const salesByDayOfWeek: { [dayString: string]: number } = {};
@@ -40,15 +46,16 @@ const ChartLastWeekSellings = ({ sellings, width, height }: Props) => {
       }));
       setSeriesData(newSeriesData);
     };
-
     separateSalesByDate(sellings);
   }, [sellings]);
 
+  //Recupera o nome do dia a partir da data
   const getDayString = (date: Date) => {
     const dayOfWeek = date.getDay();
     return daysOfWeek[dayOfWeek];
   };
 
+  //Formata o rótulo da tabela "14/04 - Seg"
   const getDaysOfWeekFromDate = (sellings: Sell[]): string[] => {
     const currentDate = new Date(sellings[0]?.date);
     const result: string[] = [];
@@ -146,4 +153,4 @@ const ChartLastWeekSellings = ({ sellings, width, height }: Props) => {
   );
 };
 
-export default ChartLastWeekSellings;
+export default ChartWeekSellings;

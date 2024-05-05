@@ -3,20 +3,15 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 //TYPES
-import {
-  Breadcrumb,
-  Company as CompanyType,
-  Sell,
-} from "../../types/global.type";
+import { Breadcrumb, Company as CompanyType } from "../../types/global.type";
 
 //Services
 import { getCompanyById } from "../../services/company.service";
-import { findSellingsByCompanyAndDate } from "../../services/sell.service";
 
 //Components
 import Stock from "./Stock";
 import PageTitle from "../../components/PageTitle";
-import CardWeekSellings from "../../components/Card/CardWeekSellings";
+import CardSellings from "../../components/Card/CardSellings";
 
 //Icons
 import { FiEdit } from "react-icons/fi";
@@ -33,8 +28,6 @@ const Company = () => {
 
   const [company, setCompany] = useState<CompanyType>();
   const [pageSelected, setPageSelected] = useState("Geral");
-  const [weekSellings, setWeekSellings] = useState<Sell[]>([]);
-  const [monthSellings, setMonthSellings] = useState<Sell[]>([]);
   const dispatch = useAppDispatch();
 
   const breadcrumb: Array<Breadcrumb> = [
@@ -70,80 +63,10 @@ const Company = () => {
     }
   };
 
-  //Format date "YY-MM-DD"
-  const formatDate = (date: Date): string => {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const day = date.getDate().toString().padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
-
-  //Get Sellings in Current Week
-  const getSellingsOnWeek = async () => {
-    try {
-      const today = new Date();
-      const firstDayOfWeek = new Date(today);
-      const lastDayOfWeek = new Date(today);
-
-      // Primeiro dia da semana (Domingo)
-      firstDayOfWeek.setDate(today.getDate() - today.getDay());
-      const formattedFirstDayOfWeek = formatDate(firstDayOfWeek);
-
-      // Último dia da semana (Sábado)
-      lastDayOfWeek.setDate(today.getDate() - today.getDay() + 6);
-      const formattedLastDayOfWeek = formatDate(lastDayOfWeek);
-
-      if (id) {
-        const res = await findSellingsByCompanyAndDate(
-          id,
-          formattedFirstDayOfWeek,
-          formattedLastDayOfWeek
-        );
-        console.log(res);
-        if (res != null) {
-          setWeekSellings(res.data ? res.data : []);
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const getSellingsOnMonth = async () => {
-    try {
-      const today = new Date();
-      const firstDayOfCurrentMonth = new Date(
-        today.getFullYear(),
-        today.getMonth(),
-        1
-      );
-      const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
-      const lastDayOfCurrentMoth = new Date(nextMonth.getTime() - 1);
-      if (id) {
-        const res = await findSellingsByCompanyAndDate(
-          id,
-          formatDate(firstDayOfCurrentMonth),
-          formatDate(lastDayOfCurrentMoth)
-        );
-        if (res != null) {
-          setMonthSellings(res.data ? res.data : []);
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   //Recupera dados da empresa
   useEffect(() => {
     getCompany();
   }, [id, company]);
-
-  //Recupera vendas da empresa na semana e mês atual
-  useEffect(() => {
-    getSellingsOnWeek();
-    getSellingsOnMonth();
-  }, []);
 
   const handleOnEditCompany = (company: CompanyType) => {
     dispatch(onOpenEdit(company));
@@ -197,12 +120,13 @@ const Company = () => {
           <div>
             {pageSelected === "Geral" && (
               <div>
-                {weekSellings.length > 0 ? (
-                  <CardWeekSellings 
-                    weekSellings={weekSellings}
-                  />
+                {id ? (
+                  <div>
+                    <CardSellings chartRangeType="year" company_id={id} />
+                    <CardSellings chartRangeType="week" company_id={id} />
+                  </div>
                 ) : (
-                  <div>Carregando vendas...</div>
+                  <div>Carregando...</div>
                 )}
               </div>
             )}
