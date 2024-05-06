@@ -26,6 +26,39 @@ const CardSellings = ({
     return `${year}-${month}-${day}`;
   };
 
+  //Get Sellings in Current Month
+  const getSellingsOnMonth = async () => {
+    setSellings([]);
+    try {
+      let today;
+      if (chartRangeDate) {
+        today = new Date(chartRangeDate);
+      } else {
+        today = new Date();
+      }
+      
+      // Obtém o primeiro dia do mês atual
+      const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  
+      // Obtém o último dia do mês atual
+      const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+  
+      if (company_id) {
+        const res = await findSellingsByCompanyAndDate(
+          company_id,
+          formatDate(firstDayOfMonth),
+          formatDate(lastDayOfMonth)
+        );
+        if (res != null) {
+          setSellings(res.data ? res.data : []);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
   //Get Sellings in Current Week
   const getSellingsOnWeek = async () => {
     setSellings([]);
@@ -53,7 +86,6 @@ const CardSellings = ({
           formattedFirstDayOfWeek,
           formattedLastDayOfWeek
         );
-        console.log(res);
         if (res != null) {
           setSellings(res.data ? res.data : []);
         }
@@ -89,13 +121,15 @@ const CardSellings = ({
       console.log(error);
     }
   };
-  
 
   //Recupera vendas da empresa na semana e mês atual
   useEffect(() => {
     switch (chartRangeType) {
       case "week":
         getSellingsOnWeek();
+        break;
+      case "month":
+        getSellingsOnMonth();
         break;
       case "year":
         getSellingsOnYear();
@@ -139,46 +173,44 @@ const CardSellings = ({
 
   return (
     <Card title={getCardTitle()} subtitle="Quantidade de vendas realizadas">
-      <div className="flex gap-8">
-        {sellings.length > 0 && (
+        <div className="flex gap-8">
           <ChartSellings
             sellings={sellings}
             width={480}
             height={300}
             chartRangeType={chartRangeType}
           />
-        )}
-        <div className="flex flex-col gap-8">
-          <div className="flex gap-3">
-            <span className="w-3 h-3 bg-primary-300 rounded-full mt-1"></span>
-            <div>
-              <h3 className="text-sm">Vendas Totais</h3>
-              <span className="text-xl font-bold">
-                {sellings.length} vendas
-              </span>
+          <div className="flex flex-col gap-8">
+            <div className="flex gap-3">
+              <span className="w-3 h-3 bg-primary-300 rounded-full mt-1"></span>
+              <div>
+                <h3 className="text-sm">Vendas Totais</h3>
+                <span className="text-xl font-bold">
+                  {sellings.length > 0 ? sellings.length : "0"} vendas
+                </span>
+              </div>
             </div>
-          </div>
-          <div className="flex gap-3 mb-2">
-            <span className="w-3 h-3 bg-primary-300 rounded-full mt-1"></span>
-            <div>
-              <h3 className="text-sm">Peças de Roupas Vendidas</h3>
-              <span className="text-xl font-bold">
-                {calcAmountOfClothesSold()} peças
-              </span>
+            <div className="flex gap-3 mb-2">
+              <span className="w-3 h-3 bg-primary-300 rounded-full mt-1"></span>
+              <div>
+                <h3 className="text-sm">Peças de Roupas Vendidas</h3>
+                <span className="text-xl font-bold">
+                  {sellings.length > 0 ? calcAmountOfClothesSold() : "0"} peças
+                </span>
+              </div>
             </div>
-          </div>
-          <div className="flex gap-3">
-            <span className="w-3 h-3 bg-secondary-300 rounded-full mt-1"></span>
-            <div>
-              <h3 className="text-sm">Receita Total</h3>
-              <span className="text-xl font-bold">
-                R$ {calcTotalRevenue(sellings)}
-              </span>
+            <div className="flex gap-3">
+              <span className="w-3 h-3 bg-secondary-300 rounded-full mt-1"></span>
+              <div>
+                <h3 className="text-sm">Receita Total</h3>
+                <span className="text-xl font-bold">
+                  R$ {sellings.length > 0 ? calcTotalRevenue(sellings) : "0.00"}
+                </span>
+              </div>
             </div>
+            <ActionButton action={() => {}}>Histórico de Vendas</ActionButton>
           </div>
-          <ActionButton action={() => {}}>Histórico de Vendas</ActionButton>
         </div>
-      </div>
     </Card>
   );
 };

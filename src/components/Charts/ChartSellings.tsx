@@ -2,6 +2,7 @@ import React from "react";
 import { Sell } from "../../types/global.type";
 import ChartWeekSellings from "./ChartWeekSellings";
 import ChartYearSellings from "./ChartYearSellings";
+import ChartMonthSellings from "./ChartMonthSellings";
 
 type Props = {
   sellings: Sell[];
@@ -11,7 +12,6 @@ type Props = {
 };
 
 const ChartSellings = ({ sellings, width, height, chartRangeType }: Props) => {
-  console.log(sellings);
   return (
     <>
       {sellings && (
@@ -25,6 +25,13 @@ const ChartSellings = ({ sellings, width, height, chartRangeType }: Props) => {
           )}
           {chartRangeType === "year" && (
             <ChartYearSellings
+              sellings={sellings}
+              width={width}
+              height={height}
+            />
+          )}
+          {chartRangeType === "month" && (
+            <ChartMonthSellings
               sellings={sellings}
               width={width}
               height={height}

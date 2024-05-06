@@ -9,11 +9,7 @@ type Props = {
   height: number;
 };
 
-const ChartWeekSellings = ({
-  width,
-  height,
-  sellings
-}: Props) => {
+const ChartWeekSellings = ({ width, height, sellings }: Props) => {
   const [seriesData, setSeriesData] = useState<Chart[]>([]);
 
   const daysOfWeek = [
@@ -46,7 +42,7 @@ const ChartWeekSellings = ({
       }));
       setSeriesData(newSeriesData);
     };
-    separateSalesByDate(sellings);
+    if (sellings.length > 0) separateSalesByDate(sellings);
   }, [sellings]);
 
   //Recupera o nome do dia a partir da data
@@ -57,7 +53,8 @@ const ChartWeekSellings = ({
 
   //Formata o rótulo da tabela "14/04 - Seg"
   const getDaysOfWeekFromDate = (sellings: Sell[]): string[] => {
-    const currentDate = new Date(sellings[0]?.date);
+    const currentDate =
+      sellings.length > 0 ? new Date(sellings[0]?.date) : new Date();
     const result: string[] = [];
 
     for (let i = 0; i < 7; i++) {
@@ -82,19 +79,11 @@ const ChartWeekSellings = ({
     },
     plotOptions: {
       bar: {
-        borderRadius: 3,
+        borderRadius: 1,
         dataLabels: {
           position: "top",
         },
         columnWidth: 30,
-      },
-    },
-    dataLabels: {
-      enabled: true,
-      offsetY: -20,
-      style: {
-        fontSize: "12px",
-        colors: ["#304758"],
       },
     },
     xaxis: {
@@ -123,6 +112,7 @@ const ChartWeekSellings = ({
       },
     },
     yaxis: {
+      tickAmount: 4,
       axisBorder: {
         show: false,
       },
@@ -138,7 +128,7 @@ const ChartWeekSellings = ({
   const series = [
     {
       name: "Vendas",
-      data: seriesData.map((item) => item.y),
+      data: seriesData.length > 0 ? seriesData.map((item) => item.y) : [0,0,0,0,0,0,0],
     },
   ];
 

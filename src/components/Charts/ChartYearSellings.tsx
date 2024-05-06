@@ -27,7 +27,7 @@ const ChartYearSellings = ({ width, height, sellings }: Props) => {
     "Dezembro",
   ];
 
-  //Agrega vendas por data no ano
+  //Agrega vendas por mês
   useEffect(() => {
     const separeteSalesByMonth = (sellings: Sell[]) => {
       const salesByMonth: { [mothString: string]: number } = {};
@@ -47,7 +47,7 @@ const ChartYearSellings = ({ width, height, sellings }: Props) => {
       }));
       setSeriesData(newSeriesData);
     };
-    separeteSalesByMonth(sellings);
+    if (sellings.length > 0) separeteSalesByMonth(sellings);
   }, [sellings]);
 
   //Recupera o nome do mês
@@ -63,19 +63,11 @@ const ChartYearSellings = ({ width, height, sellings }: Props) => {
     },
     plotOptions: {
       bar: {
-        borderRadius: 3,
+        borderRadius: 1,
         dataLabels: {
           position: "top",
         },
         columnWidth: 30,
-      },
-    },
-    dataLabels: {
-      enabled: true,
-      offsetY: -20,
-      style: {
-        fontSize: "12px",
-        colors: ["#304758"],
       },
     },
     xaxis: {
@@ -104,6 +96,7 @@ const ChartYearSellings = ({ width, height, sellings }: Props) => {
       },
     },
     yaxis: {
+      tickAmount: 4,
       axisBorder: {
         show: false,
       },

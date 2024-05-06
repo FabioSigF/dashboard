@@ -122,8 +122,11 @@ const Company = () => {
               <div>
                 {id ? (
                   <div>
+                    <div className="flex gap-2">
                     <CardSellings chartRangeType="year" company_id={id} />
+                    </div>
                     <CardSellings chartRangeType="week" company_id={id} />
+                    <CardSellings chartRangeType="month" company_id={id} />
                   </div>
                 ) : (
                   <div>Carregando...</div>
