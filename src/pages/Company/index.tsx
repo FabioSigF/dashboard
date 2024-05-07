@@ -22,6 +22,8 @@ import {
   onOpen as onOpenCompanyModal,
   onOpenEdit,
 } from "../../redux/companyModal/slice";
+import Sellings from "../Sellings";
+import BestSellingClothes from "../../components/BestSellingClothes";
 
 const Company = () => {
   const { id } = useParams();
@@ -121,11 +123,23 @@ const Company = () => {
             {pageSelected === "Geral" && (
               <div>
                 {id ? (
-                  <div>
-                    <div className="flex gap-2">
-                    <CardSellings chartRangeType="year" company_id={id} />
+                  <div className="flex flex-col gap-12">
+                    <div className="grid grid-cols-5 gap-8">
+                      <div className="col-span-3">
+                        <CardSellings chartRangeType="year" company_id={id} />
+                      </div>
+                      <div className="col-span-2">
+                        <Sellings isAWidget />
+                      </div>
                     </div>
-                    <CardSellings chartRangeType="week" company_id={id} />
+                    <div className="grid grid-cols-5 gap-8">
+                      <div className="col-span-2">
+                        <BestSellingClothes />
+                      </div>
+                      <div className="col-span-3">
+                        <CardSellings chartRangeType="week" company_id={id} />
+                      </div>
+                    </div>
                     <CardSellings chartRangeType="month" company_id={id} />
                   </div>
                 ) : (
