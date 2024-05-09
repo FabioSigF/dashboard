@@ -1,12 +1,26 @@
-import ActionButton from "../../ActionButton";
-import Card from "..";
-import { Sell } from "../../../types/global.type";
-import ChartSellings from "../../Charts/ChartSellings";
+//React
 import { useEffect, useState } from "react";
-import { findSellingsByCompanyAndDate } from "../../../services/sell.service";
+
+//Type
+import { Sell } from "../../../types/global.type";
+
+//Component
+import Card from "..";
+import ChartSellings from "../../Charts/ChartSellings";
+
+//Service
+import {
+  findSellByDate,
+  findSellingsByCompanyAndDate,
+} from "../../../services/sell.service";
+
+//Icon
+import { MdOutlineAttachMoney } from "react-icons/md";
+import { IoShirtOutline } from "react-icons/io5";
+import { AiOutlineShoppingCart } from "react-icons/ai";
 
 type Props = {
-  company_id: string;
+  company_id?: string;
   chartRangeDate?: string;
   chartRangeType: "week" | "month" | "year" | "allTime";
 };
@@ -36,16 +50,32 @@ const CardSellings = ({
       } else {
         today = new Date();
       }
-      
+
       // Obtém o primeiro dia do mês atual
-      const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-  
+      const firstDayOfMonth = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        1
+      );
+
       // Obtém o último dia do mês atual
-      const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-  
+      const lastDayOfMonth = new Date(
+        today.getFullYear(),
+        today.getMonth() + 1,
+        0
+      );
+
       if (company_id) {
         const res = await findSellingsByCompanyAndDate(
           company_id,
+          formatDate(firstDayOfMonth),
+          formatDate(lastDayOfMonth)
+        );
+        if (res != null) {
+          setSellings(res.data ? res.data : []);
+        }
+      } else {
+        const res = await findSellByDate(
           formatDate(firstDayOfMonth),
           formatDate(lastDayOfMonth)
         );
@@ -57,7 +87,6 @@ const CardSellings = ({
       console.log(error);
     }
   };
-
 
   //Get Sellings in Current Week
   const getSellingsOnWeek = async () => {
@@ -89,6 +118,14 @@ const CardSellings = ({
         if (res != null) {
           setSellings(res.data ? res.data : []);
         }
+      } else {
+        const res = await findSellByDate(
+          formattedFirstDayOfWeek,
+          formattedLastDayOfWeek
+        );
+        if (res != null) {
+          setSellings(res.data ? res.data : []);
+        }
       }
     } catch (error) {
       console.log(error);
@@ -110,6 +147,14 @@ const CardSellings = ({
       if (company_id) {
         const res = await findSellingsByCompanyAndDate(
           company_id,
+          formatDate(firstDayOfYear),
+          formatDate(lastDayOfYear)
+        );
+        if (res != null) {
+          setSellings(res.data ? res.data : []);
+        }
+      } else {
+        const res = await findSellByDate(
           formatDate(firstDayOfYear),
           formatDate(lastDayOfYear)
         );
@@ -173,44 +218,50 @@ const CardSellings = ({
 
   return (
     <Card title={getCardTitle()} subtitle="Quantidade de vendas realizadas">
-        <div className="flex gap-8">
-          <ChartSellings
-            sellings={sellings}
-            width={480}
-            height={300}
-            chartRangeType={chartRangeType}
-          />
-          <div className="flex flex-col gap-8">
-            <div className="flex gap-3">
-              <span className="w-3 h-3 bg-primary-300 rounded-full mt-1"></span>
-              <div>
-                <h3 className="text-sm">Vendas Totais</h3>
-                <span className="text-xl font-bold">
-                  {sellings.length > 0 ? sellings.length : "0"} vendas
-                </span>
-              </div>
+      <div className="flex gap-8 items-end">
+        <ChartSellings
+          sellings={sellings}
+          width={460}
+          height={300}
+          chartRangeType={chartRangeType}
+        />
+        <div className="flex flex-col gap-6 mb-6">
+          <div className="flex items-center gap-3">
+            <span className="bg-blue-50 rounded-lg mt-1 p-3 text-lg text-blue-500">
+              <AiOutlineShoppingCart />
+            </span>
+            <div>
+              <h3 className="text-sm">Vendas Totais</h3>
+              <span className="text-lg font-bold">
+                {sellings.length > 0 ? sellings.length : "0"} {sellings.length == 1 ? "venda" : "vendas"}
+              </span>
             </div>
-            <div className="flex gap-3 mb-2">
-              <span className="w-3 h-3 bg-primary-300 rounded-full mt-1"></span>
-              <div>
-                <h3 className="text-sm">Peças de Roupas Vendidas</h3>
-                <span className="text-xl font-bold">
-                  {sellings.length > 0 ? calcAmountOfClothesSold() : "0"} peças
-                </span>
-              </div>
+          </div>
+          <div className="flex items-center gap-3 mb-2">
+            <span className="bg-blue-50 rounded-lg mt-1 p-3 text-lg text-blue-500">
+            <IoShirtOutline />
+              
+            </span>
+            <div>
+              <h3 className="text-sm">Peças de Roupas Vendidas</h3>
+              <span className="text-lg font-bold">
+                {sellings.length > 0 ? calcAmountOfClothesSold() : "0"} {sellings.length == 1 ? "peça" : "peças"}
+              </span>
             </div>
-            <div className="flex gap-3">
-              <span className="w-3 h-3 bg-secondary-300 rounded-full mt-1"></span>
-              <div>
-                <h3 className="text-sm">Receita Total</h3>
-                <span className="text-xl font-bold">
-                  R$ {sellings.length > 0 ? calcTotalRevenue(sellings) : "0.00"}
-                </span>
-              </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="bg-blue-50 rounded-lg mt-1 p-3 text-lg text-blue-500">
+              <MdOutlineAttachMoney />
+            </span>
+            <div>
+              <h3 className="text-sm">Receita Total</h3>
+              <span className="text-lg font-bold">
+                R$ {sellings.length > 0 ? calcTotalRevenue(sellings) : "0.00"}
+              </span>
             </div>
-            <ActionButton action={() => {}}>Histórico de Vendas</ActionButton>
           </div>
         </div>
+      </div>
     </Card>
   );
 };

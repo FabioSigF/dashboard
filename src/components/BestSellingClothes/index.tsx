@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
-import Card from "../Card";
 import { useParams } from "react-router-dom";
+//Component
+import Card from "../Card";
+//Service
 import { findSellByCompanyId } from "../../services/sell.service";
+//Apex Chart
 import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
-import { SellItem } from "../../types/global.type";
-import { IoShirtOutline } from "react-icons/io5";
+//Types
+import { SellItem, Sellings } from "../../types/global.type";
 
 const BestSellingClothes = () => {
   const { id } = useParams();
@@ -21,7 +24,7 @@ const BestSellingClothes = () => {
     if (id) {
       const res = await findSellByCompanyId(id);
       if (res != null) {
-        const sales = res;
+        const sales: Sellings[] = res;
         const itemCount: { [key: string]: number } = {};
         sales.forEach((sale) => {
           sale.items.forEach((item) => {
@@ -84,7 +87,7 @@ const BestSellingClothes = () => {
         options={options}
         series={chartData.data}
         type="donut"
-        height={400}
+        height={347}
       />
     </Card>
   );

@@ -26,7 +26,6 @@ const Sellings = ({ isAWidget }: Props) => {
   const getSellings = async () => {
     // @ts-expect-error - Os dados de Sellings estão em response{}
     const res = await getAllSellings().then((res) => res.response);
-    console.log(res);
     if (res != null) setSellings(res);
   };
 

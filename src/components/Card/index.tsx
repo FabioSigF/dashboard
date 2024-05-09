@@ -9,7 +9,7 @@ type Props = {
 
 const Card = ({ title, subtitle, children }: Props) => {
   return (
-    <div className={`${mainDiv} flex flex-col gap-2 w-full`}>
+    <div className={`${mainDiv} flex flex-col gap-2 w-full bg-white`}>
       <div className="flex flex-col gap-2 mb-8">
         <h2 className="text-xl font-medium cursor-pointer">{title}</h2>
         <p className="text-gray-400 text-sm">{subtitle}</p>
