@@ -37,7 +37,7 @@ const StockBillboard = ({ companyId }: Props) => {
           <div className="mb-3">Alertas ({stockItems.length})</div>
           <ul
             className={`flex flex-col gap-2 ${
-              !isOpenAlerts && "max-h-[150px] overflow-hidden"
+              !isOpenAlerts && "xs:max-h-[150px] overflow-hidden"
             }`}
           >
             {stockItems.map((item, key) => (

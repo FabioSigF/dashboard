@@ -92,16 +92,16 @@ const Company = () => {
               className={`w-min flex gap-6 relative px-3 transition bg-gray-50 rounded-md py-2 before:absolute before:bg-primary-300 before:h-full before:rounded-md before:top-0 before:left-0 before:transition-all 
               ${
                 pageSelected === "Geral" &&
-                "before:translate-x-0 before:w-[135px]"
+                "before:translate-x-0 before:w-[90px] xs:before:w-[135px]"
               }
               ${
                 pageSelected === "Estoque" &&
-                "before:translate-x-full before:w-[135px]"
+                "before:translate-x-full before:w-[90px] xs:before:w-[135px]"
               }
               `}
             >
               <li
-                className={`relative cursor-pointer w-28 text-center ${
+                className={`relative cursor-pointer w-16 xs:w-28 text-center ${
                   pageSelected === "Geral" ? "text-white" : ""
                 }`}
                 onClick={() => handleChangePage("Geral")}
@@ -109,7 +109,7 @@ const Company = () => {
                 Geral
               </li>
               <li
-                className={`relative cursor-pointer w-28 text-center ${
+                className={`relative cursor-pointer w-16 xs:w-28 text-center ${
                   pageSelected === "Estoque" ? "text-white" : ""
                 }`}
                 onClick={() => handleChangePage("Estoque")}
@@ -124,16 +124,16 @@ const Company = () => {
               <div>
                 {id ? (
                   <div className="flex flex-col gap-12">
-                    <div className="grid grid-cols-5 gap-8">
-                      <div className="col-span-3">
+                    <div className="md:grid md:grid-cols-5 md:gap-8">
+                      <div className="col-span-3 max-md:mb-12">
                         <CardSellings chartRangeType="year" company_id={id} />
                       </div>
                       <div className="col-span-2">
                         <Sellings isAWidget />
                       </div>
                     </div>
-                    <div className="grid grid-cols-5 gap-8">
-                      <div className="col-span-2">
+                    <div className="md:grid md:grid-cols-5 md:gap-8">
+                      <div className="col-span-2 max-md:mb-12">
                         <BestSellingClothes />
                       </div>
                       <div className="col-span-3">

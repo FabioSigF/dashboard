@@ -9,7 +9,7 @@ const PageTitle = ({ title, breadcrumb }: Props) => {
     <div className="flex flex-col gap-4">
       <h1 className="text-3xl font-medium">{title}</h1>
       <nav>
-        <ol className="flex items-center gap-1">
+        <ol className="flex items-center gap-1 max-xs:flex-wrap">
           {breadcrumb.map((item, key) => (
             <li key={key} className="flex items-center gap-4 text-gray-500">
               <a

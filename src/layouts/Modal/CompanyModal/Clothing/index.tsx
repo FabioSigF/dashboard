@@ -214,7 +214,7 @@ const Clothing = ({ clothing, setClothing }: Props) => {
             Vestuário
           </label>
           <div className={`${inputStyle}`}>
-            {clothing ? (
+            <div className="max-md:overflow-x-auto">
               <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead className="uppercase">
                   <tr className="">
@@ -235,59 +235,65 @@ const Clothing = ({ clothing, setClothing }: Props) => {
                     </th>
                   </tr>
                 </thead>
-                <tbody>
-                  {clothing.map((item, key) => (
-                    <tr key={key}>
-                      <th
-                        scope="row"
-                        className="px-6 py-4 font-medium whitespace-nowrap"
-                      >
-                        {item.name}
-                      </th>
-                      <td className="px-6 py-4">
-                        {
-                          //@ts-expect-error Tipo colors é um array
-                          item.colors.map((color, key) => (
-                            <span key={key}>
-                              {color}
-                              {key !== item.colors.length - 1 && ", "}
-                            </span>
-                          ))
-                        }
-                      </td>
-                      <td className="px-6 py-4">
-                        {
-                          //@ts-expect-error Tipo sizes é um array
-                          item.sizes.map((size, key) => (
-                            <span key={key}>
-                              {size}
-                              {key !== item.sizes.length - 1 && ", "}
-                            </span>
-                          ))
-                        }
-                      </td>
-                      <td className="px-6 py-4">R$ {item.price.toFixed(2)}</td>
-                      <td className="px-6 py-4 flex gap-1">
-                        <div
-                          className="text-xl cursor-pointer hover:text-black-600-p"
-                          onClick={() => handleOnClickOnEditCloth(item)}
+                {clothing ? (
+                  <tbody>
+                    {clothing.map((item, key) => (
+                      <tr key={key}>
+                        <th
+                          scope="row"
+                          className="px-6 py-4 font-medium whitespace-nowrap"
                         >
-                          <FiEdit />
-                        </div>
-                        <div
-                          className="text-xl cursor-pointer hover:text-black-600-p"
-                          onClick={() => handleRemoveClothing()}
-                        >
-                          <FiTrash2 />
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
+                          {item.name}
+                        </th>
+                        <td className="px-6 py-4">
+                          {
+                            //@ts-expect-error Tipo colors é um array
+                            item.colors.map((color, key) => (
+                              <span key={key}>
+                                {color}
+                                {key !== item.colors.length - 1 && ", "}
+                              </span>
+                            ))
+                          }
+                        </td>
+                        <td className="px-6 py-4">
+                          {
+                            //@ts-expect-error Tipo sizes é um array
+                            item.sizes.map((size, key) => (
+                              <span key={key}>
+                                {size}
+                                {key !== item.sizes.length - 1 && ", "}
+                              </span>
+                            ))
+                          }
+                        </td>
+                        <td className="px-6 py-4">
+                          R$ {item.price.toFixed(2)}
+                        </td>
+                        <td className="px-6 py-4 flex gap-1">
+                          <div
+                            className="text-xl cursor-pointer hover:text-black-600-p"
+                            onClick={() => handleOnClickOnEditCloth(item)}
+                          >
+                            <FiEdit />
+                          </div>
+                          <div
+                            className="text-xl cursor-pointer hover:text-black-600-p"
+                            onClick={() => handleRemoveClothing()}
+                          >
+                            <FiTrash2 />
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                ) : (
+                  <div>
+                    Ainda não foi adicionada nenhuma peça ao vestuário...
+                  </div>
+                )}
               </table>
-            ) : (
-              <div>Ainda não foi adicionada nenhuma peça ao vestuário...</div>
-            )}
+            </div>
           </div>
         </div>
       </div>

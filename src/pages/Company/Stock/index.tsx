@@ -221,7 +221,7 @@ const Stock = ({ company_id }: Props) => {
           <StockBillboard 
             companyId={company_id}
           />
-          <form className="grid grid-cols-4 gap-4 items-end mb-8">
+          <form className="max-sm:flex max-sm:flex-col sm:grid sm:grid-cols-4 gap-4 sm:items-end mb-8">
             <div className="flex flex-col">
               <label
                 htmlFor="item_sell_tipo"

@@ -218,13 +218,17 @@ const CardSellings = ({
 
   return (
     <Card title={getCardTitle()} subtitle="Quantidade de vendas realizadas">
-      <div className="flex flex-col md:flex-row gap-8 items-end">
-        <ChartSellings
-          sellings={sellings}
-          width={460}
-          height={300}
-          chartRangeType={chartRangeType}
-        />
+      <div className="flex flex-col lg:flex-row gap-8 items-center lg:items-end max-md:overflow-hidden">
+        <div className="max-md:overflow-x-auto max-md:max-w-full max-md:overflow-y-hidden">
+          <div className="max-md:min-w-[500px]">
+            <ChartSellings
+              sellings={sellings}
+              width={460}
+              height={300}
+              chartRangeType={chartRangeType}
+            />
+          </div>
+        </div>
         <div className="flex flex-col gap-6 mb-6">
           <div className="flex items-center gap-3">
             <span className="bg-blue-50 rounded-lg mt-1 p-3 text-lg text-blue-500">
