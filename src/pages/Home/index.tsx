@@ -30,7 +30,7 @@ const Home = () => {
   const [sellingsOnYear, setSellingsOnYear] = useState<Sell[]>([]);
   const [cardsData, setCardsData] = useState<
     {
-      bgColor: string;
+      iconBgColor: string;
       title: string;
       value: string;
       icon: ReactElement;
@@ -102,25 +102,25 @@ const Home = () => {
     if (sellingsMonth.length > 0) {
       setCardsData([
         {
-          bgColor: "bg-blue",
+          iconBgColor: "bg-blue-400",
           title: "Receita Total do Mês",
           value: `R$ ${calcTotalRevenue(sellingsMonth)}`,
           icon: <MdOutlineCreditCard />,
         },
         {
-          bgColor: "bg-yellow",
+          iconBgColor: "bg-yellow-400",
           title: "Vendas no Mês",
           value: calcAmountOfClothesSold(sellingsMonth).toString(),
           icon: <MdOutlineShoppingBag />,
         },
         {
-          bgColor: "bg-cyan",
+          iconBgColor: "bg-cyan-400",
           title: "Marca Mais Vendida",
           value: "Metta",
           icon: <IoShirtOutline />,
         },
         {
-          bgColor: "bg-red",
+          iconBgColor: "bg-red-400",
           title: "Clientes Atendidos Hoje",
           value: "12",
           icon: <MdOutlinePerson />,
@@ -155,14 +155,14 @@ const Home = () => {
 
   return (
     <div className="mx-6 my-6 flex flex-col gap-12">
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid md:grid-cols-4 xs:grid-cols-2 gap-4">
         {cardsData.map((item, key) => (
           <div
-            className={`shadow-primary p-containerWBoxShadow rounded-lg flex gap-4 items-center ${item.bgColor}-100`}
+            className={`shadow-primary p-containerWBoxShadow rounded-lg flex gap-4 items-center`}
             key={key}
           >
             <div
-              className={`rounded-lg text-white ${item.bgColor}-400 w-[50px] h-[50px] text-2xl flex items-center justify-center`}
+              className={`rounded-lg text-white ${item.iconBgColor} w-[50px] h-[50px] text-2xl flex items-center justify-center`}
             >
               {item.icon}
             </div>
@@ -173,12 +173,12 @@ const Home = () => {
           </div>
         ))}
       </div>
-      <div className="grid grid-cols-5 gap-4 items-start">
+      <div className="md:grid md:grid-cols-5 gap-4 items-start">
         <div
-          className={`${mainDiv} bg-primary-400 p-8 pb-0 flex justify-between col-span-2 items-start text-white`}
+          className={`${mainDiv} bg-primary-400 p-8 sm:pb-0 flex justify-between md:col-span-2 items-start text-white max-md:mb-12`}
         >
           <div>
-            <div className="pb-4 flex gap-4 items-center">
+            <div className="pb-4 flex max-xs:flex-col gap-4 items-center">
               <div className="rounded-lg bg-white p-4">
                 <GrLineChart className="text-gray-600" />
               </div>
@@ -188,16 +188,16 @@ const Home = () => {
             </div>
             <div className="pb-4">
               <p className="pb-4">Confira seu emprendimento!</p>
-              <div className="flex gap-4">
+              <div className="flex gap-4 max-sm:flex-col">
                 <ActionButton
-                  action={()=>navigate("/analytics")}
+                  action={() => navigate("/analytics")}
                   bgColor="bg-secondary-300"
                   extraCSS="hover:bg-secondary-400"
                 >
                   Análises
                 </ActionButton>
                 <ActionButton
-                  action={()=>navigate("/business")}
+                  action={() => navigate("/business")}
                   bgColor="bg-secondary-300"
                   extraCSS="hover:bg-secondary-400"
                 >
@@ -206,13 +206,13 @@ const Home = () => {
               </div>
             </div>
           </div>
-          <img src={welcomeBg} alt="Welcome image" className="w-auto h-auto" />
+          <img src={welcomeBg} alt="Welcome image" className="w-auto h-auto sm:block hidden" />
         </div>
         <div className="col-span-3">
           <CardSellings chartRangeType="week" />
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="max-md:flex max-md:flex-col md:grid md:grid-cols-2 gap-12 md:gap-4">
         <Schedule isAWidget />
         <Sellings isAWidget />
       </div>

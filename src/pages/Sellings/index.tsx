@@ -1,10 +1,14 @@
-//COMPONENTS
 import { useEffect, useState } from "react";
+//COMPONENTS
 import PageTitle from "../../components/PageTitle";
+//Service
 import { getAllSellings } from "../../services/sell.service";
+//Type
 import { Breadcrumb, SellItem } from "../../types/global.type";
 import { Sellings as SellingsType } from "../../types/global.type";
+//Icons
 import { IoShirtOutline } from "react-icons/io5";
+
 type Props = {
   isAWidget?: boolean;
 };
@@ -43,7 +47,9 @@ const Sellings = ({ isAWidget }: Props) => {
     if (diferencaTempo < 60) {
       return `${diferencaTempo} min`;
     } else if (diferencaTempo < 1440) {
-      return (diferencaTempo / 60).toFixed(0) > "1" ? `${(diferencaTempo / 60).toFixed(0)} horas` : `${(diferencaTempo / 60).toFixed(0)} hora`;
+      return (diferencaTempo / 60).toFixed(0) > "1"
+        ? `${(diferencaTempo / 60).toFixed(0)} horas`
+        : `${(diferencaTempo / 60).toFixed(0)} hora`;
     } else {
       return `${dataTempo.getDate()}/${
         dataTempo.getMonth() < 10
@@ -75,59 +81,73 @@ const Sellings = ({ isAWidget }: Props) => {
           <PageTitle title="Vendas Recentes" breadcrumb={breadcrumb} />
         </div>
       )}
-      <div className="shadow-primary p-containerWBoxShadow rounded-lg">
-        {isAWidget && (
-          <div className="flex flex-col gap-2 mb-8">
-            <h2 className="text-xl font-medium">Vendas Recentes</h2>
-            <p className="text-gray-400 text-sm">Últimas Vendas Realizadas</p>
-          </div>
-        )}
-        <div className="flex items-center pb-4 mb-4 border-b border-gray-300">
-          <span className="w-4/6 text-sm font-bold">Produto</span>
-          <span className="w-1/6 text-sm font-bold">Preço</span>
-          <span className="w-1/6 text-sm font-bold">Data</span>
-        </div>
-
-        <div className="flex flex-col gap-2">
-          {sellings &&
-            sellings.map((sell, key) => (
-              <div className="flex items-center" key={key}>
-                <div className="w-4/6 flex gap-4 items-center">
-                  <div
-                    className={`rounded-md ${
-                      key % 2 === 0 ? "bg-green-400" : "bg-secondary-300"
-                    } text-white w-[40px] h-[40px] flex items-center justify-center`}
-                  >
-                    <IoShirtOutline />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-sm font-medium">
-                      {sell.company_name}
-                    </span>
-                    <span className="text-gray-400 text-xs overflow-hidden">
-                      {!isAWidget ? (
-                        <span>
-                          {sell.items.map((item, key) => (
-                            <span key={key}>
-                              {item.amount} {item.name} {item.size} {item.color}
-                              {key !== sell.items.length - 1 && ", "}
-                            </span>
-                          ))}
-                        </span>
-                      ) : (
-                        <>{showSellDetails(sell.items)}</>
-                      )}
-                    </span>
-                  </div>
-                </div>
-                <div className="w-1/6 text-sm">
-                  R$ {sell.total_price.toFixed(2)}
-                </div>
-                <div className="w-1/6 text-sm">
-                  {calculaTempo(sell.date.toString())}
-                </div>
+      <div className="shadow-primary p-containerWBoxShadow rounded-lg relative">
+        <div className="overflow-auto">
+          <div className="w-[600px] sm:w-full">
+            {isAWidget && (
+              <div className="flex flex-col gap-2 mb-8">
+                <h2 className="text-xl font-medium">Vendas Recentes</h2>
+                <p className="text-gray-400 text-sm">
+                  Últimas Vendas Realizadas
+                </p>
               </div>
-            ))}
+            )}
+            <div className="flex items-center pb-4 mb-4 border-b border-gray-300">
+              <span className="w-4/6 text-sm font-bold">Produto</span>
+              <span className="w-1/6 text-sm font-bold">Preço</span>
+              <span className="w-1/6 text-sm font-bold">Data</span>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              {sellings &&
+                sellings.map((sell, key) => (
+                  <div className="flex items-center" key={key}>
+                    <div className="w-4/6 flex gap-4 items-center">
+                      <div
+                        className={`rounded-md ${
+                          key % 2 === 0 ? "bg-green-400" : "bg-secondary-300"
+                        } text-white w-[40px] h-[40px] flex items-center justify-center`}
+                      >
+                        <IoShirtOutline />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-sm font-bold">
+                          {sell.company_name}
+                        </span>
+                        <span className="text-gray-400 text-xs overflow-hidden">
+                          {!isAWidget ? (
+                            <span>
+                              {sell.items.map((item, key) => (
+                                <span key={key}>
+                                  {item.amount} {item.name} {item.size}{" "}
+                                  {item.color}
+                                  {key !== sell.items.length - 1 && ", "}
+                                </span>
+                              ))}
+                            </span>
+                          ) : (
+                            <>{showSellDetails(sell.items)}</>
+                          )}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="w-1/6 text-sm">
+                      R$ {sell.total_price.toFixed(2)}
+                    </div>
+                    <div className="w-1/6 text-sm">
+                      {calculaTempo(sell.date.toString())}
+                    </div>
+                  </div>
+                ))}
+            </div>
+            {sellings && sellings?.length > 5 && (
+              <div className=" w-full flex justify-center">
+                <span className="text-primary-300 hover:text-primary-400 cursor-pointer pt-[14px]">
+                  Ver mais
+                </span>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

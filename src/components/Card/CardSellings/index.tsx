@@ -218,7 +218,7 @@ const CardSellings = ({
 
   return (
     <Card title={getCardTitle()} subtitle="Quantidade de vendas realizadas">
-      <div className="flex gap-8 items-end">
+      <div className="flex flex-col md:flex-row gap-8 items-end">
         <ChartSellings
           sellings={sellings}
           width={460}
@@ -233,19 +233,20 @@ const CardSellings = ({
             <div>
               <h3 className="text-sm">Vendas Totais</h3>
               <span className="text-lg font-bold">
-                {sellings.length > 0 ? sellings.length : "0"} {sellings.length == 1 ? "venda" : "vendas"}
+                {sellings.length > 0 ? sellings.length : "0"}{" "}
+                {sellings.length == 1 ? "venda" : "vendas"}
               </span>
             </div>
           </div>
           <div className="flex items-center gap-3 mb-2">
             <span className="bg-blue-50 rounded-lg mt-1 p-3 text-lg text-blue-500">
-            <IoShirtOutline />
-              
+              <IoShirtOutline />
             </span>
             <div>
               <h3 className="text-sm">Peças de Roupas Vendidas</h3>
               <span className="text-lg font-bold">
-                {sellings.length > 0 ? calcAmountOfClothesSold() : "0"} {sellings.length == 1 ? "peça" : "peças"}
+                {sellings.length > 0 ? calcAmountOfClothesSold() : "0"}{" "}
+                {sellings.length == 1 ? "peça" : "peças"}
               </span>
             </div>
           </div>

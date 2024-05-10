@@ -21,7 +21,10 @@ export default {
       },
       padding: {
         "containerWBoxShadow":  "1rem 1.5rem"
-      }
+      },
+      backgroundImage: (theme) => ({
+        "shadow": "linear-gradient(0deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 100%)"
+      }),
     },
     screens: {
       xs: "480px",
