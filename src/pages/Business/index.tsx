@@ -23,6 +23,10 @@ import { getAllCompanies } from "../../services/company.service";
 import { TbBuildingStore, TbHanger, TbShoppingCartPlus } from "react-icons/tb";
 
 const Business = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredItems, setFilteredItems] = useState<Company[]>([]);
+  const [companies, setCompanies] = useState<Company[]>();
+
   const breadcrumb: Array<Breadcrumb> = [
     {
       title: "Aplicativos",
@@ -36,8 +40,18 @@ const Business = () => {
 
   const navigate = useNavigate();
 
-  const handleOnSearch = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleOnSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
+    setSearchTerm(e.target.value);
+    if (companies) {
+      setFilteredItems(
+        companies
+          .filter((item) =>
+            item.name.toLowerCase().includes(searchTerm.toLowerCase())
+          )
+          .sort((a, b) => a.name.localeCompare(b.name))
+      );
+    }
   };
 
   const dispatch = useAppDispatch();
@@ -50,12 +64,12 @@ const Business = () => {
     dispatch(onOpenStockModal({ idCompany: idCompany }));
   };
 
-  const [companies, setCompanies] = useState<Company[]>();
 
   const getCompanies = async () => {
     const res = await getAllCompanies();
     if (res != null) {
-      setCompanies(res);
+      setCompanies(res.sort((a, b) => a.name.localeCompare(b.name)));
+      setFilteredItems(res.sort((a, b) => a.name.localeCompare(b.name)));
     }
   };
 
@@ -76,6 +90,8 @@ const Business = () => {
             type="text"
             className="w-full pl-6 text-sm"
             placeholder="Digite o nome da instituição..."
+            value={searchTerm}
+            onChange={(e) => handleOnSearch(e)}
           />
         </form>
         <ActionButton
@@ -95,8 +111,8 @@ const Business = () => {
             </div>
             <div>
               <div className="flex flex-col gap-2">
-                {companies ? (
-                  companies.map((item, key) => (
+                {filteredItems ? (
+                  filteredItems.map((item, key) => (
                     <div
                       className="flex items-center text-sm font-medium"
                       key={key}
@@ -136,7 +152,7 @@ const Business = () => {
                   ))
                 ) : (
                   <span className="text-sm text-gray-300">
-                    Carregando empresas...
+                    Não foram encontradas empresas a partir da busca...
                   </span>
                 )}
               </div>
