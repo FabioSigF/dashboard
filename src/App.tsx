@@ -14,10 +14,11 @@ import Schedule from "./pages/Schedule";
 import ScheduleModal from "./layouts/Modal/ScheduleModal";
 
 //TOASTIFY
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Sellings from "./pages/Sellings";
 import Company from "./pages/Company";
+import Analytics from "./pages/Analytics";
 
 const App = () => {
   const { isOpen } = useAppSelector((state) => state.sidebar);
@@ -45,6 +46,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/business" element={<Business />} />
+            <Route path="/analytics" element={<Analytics />} />
             <Route path="/business/company/:id" element={<Company />} />
             <Route path="/business/sell/:id" element={<ItemSell />} />
             <Route path="/sellings" element={<Sellings />} />

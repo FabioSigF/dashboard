@@ -45,7 +45,7 @@ const StockBillboard = ({ companyId }: Props) => {
                 className="text-sm flex items-center gap-2 bg-red-200 py-4 px-3 border border-red-400 rounded-lg"
                 key={key}
               >
-                <IoWarningOutline className="text-red-500" />A {item.item} de
+                <IoWarningOutline className="text-red-500" />{item.item} de
                 tamanho {item.size} e cor {item.color} possui apenas{" "}
                 {item.amount} unidades.
               </li>

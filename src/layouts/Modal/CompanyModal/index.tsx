@@ -71,6 +71,15 @@ const CompanyModal = () => {
     try {
       data.clothing = clothing;
       const res = await createCompany(data);
+      toast.success("Empresa criada com sucesso!");
+      reset({
+        name: "",
+        cnpj: "",
+        category: "",
+        tel: "",
+        cel: "",
+      });
+      dispatch(onClose());
       return res;
     } catch (error) {
       console.log(error);

@@ -209,7 +209,7 @@ const Home = () => {
           <img src={welcomeBg} alt="Welcome image" className="w-auto h-auto sm:block hidden" />
         </div>
         <div className="col-span-3">
-          <CardSellings chartRangeType="week" />
+          <CardSellings chartRangeType="month" />
         </div>
       </div>
       <div className="max-md:flex max-md:flex-col md:grid md:grid-cols-2 gap-12 md:gap-4">

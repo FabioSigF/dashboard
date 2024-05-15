@@ -14,54 +14,35 @@ const ChartMonthSellings = ({ width, height, sellings }: Props) => {
   // Obtém o mês atual
   const today = new Date();
   const currentMonth = today.getMonth();
+  const currentYear = today.getFullYear();
 
   //Agrega vendas por dia no mês
   useEffect(() => {
     const separateSalesByDayOfMonth = (sellings: Sell[]) => {
-      const salesByDayOfMonth: { [dayOfMonth: string]: number } = {};
+      const salesByDay: { [key: string]: number } = {};
 
-      // Inicializa as contagens para todos os 31 dias do mês
-      for (let day = 1; day <= 31; day++) {
-        salesByDayOfMonth[
-          `${day.toString().padStart(2, "0")}/${(currentMonth + 1)
-            .toString()
-            .padStart(2, "0")}`
-        ] = 0;
-      }
-
-      // Itera sobre as vendas e incrementa a contagem para o dia correspondente do mês
       sellings.forEach((selling) => {
-        const date = new Date(selling.date);
-        const dayOfMonth = `${date.getDate().toString().padStart(2, "0")}/${(
-          currentMonth + 1
-        )
-          .toString()
-          .padStart(2, "0")}`;
-        salesByDayOfMonth[dayOfMonth]++;
+        const sellingDate = new Date(selling.date);
+        const sellingDay = sellingDate.getDate().toString();
+
+        if (!salesByDay[sellingDay]) {
+          salesByDay[sellingDay] = 0;
+        }
+
+        salesByDay[sellingDay]++;
       });
 
-      const newSeriesData = [];
-      for (let day = 1; day <= 31; day++) {
-        const sale =
-          salesByDayOfMonth[
-            `${day.toString().padStart(2, "0")}/${(currentMonth + 1)
-              .toString()
-              .padStart(2, "0")}`
-          ];
-        // Começando de 1 até 31
-        if (sale > 0) {
-          newSeriesData.push({
-            x: `${day.toString().padStart(2, "0")}/${(currentMonth + 1)
-              .toString()
-              .padStart(2, "0")}`,
-            y: sale,
-          });
-        }
-      }
-      setSeriesData(newSeriesData);
+      const salesData: { x: string; y: number }[] = Object.entries(
+        salesByDay
+      ).map(([day, count]) => ({
+        x: day,
+        y: count,
+      }));
+
+      setSeriesData(salesData);
     };
 
-    if (sellings.length > 0) separateSalesByDayOfMonth(sellings);
+    separateSalesByDayOfMonth(sellings);
   }, [sellings, currentMonth]);
 
   const options: ApexOptions = {
@@ -70,14 +51,13 @@ const ChartMonthSellings = ({ width, height, sellings }: Props) => {
     },
     yaxis: {
       tickAmount: 4,
-      
     },
     stroke: {
       curve: "smooth",
     },
     xaxis: {
-      type: "category",
-      categories: seriesData.map((item) => item.x),
+      type: "datetime",
+      categories: seriesData.map((item) => new Date(currentYear, currentMonth, Number(item.x)).getTime()).sort((a, b) => a - b),
     },
     tooltip: {
       x: {

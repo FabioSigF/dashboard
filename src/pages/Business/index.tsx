@@ -5,11 +5,9 @@ import { Breadcrumb, Company } from "../../types/global.type";
 
 //ICONS
 import {
-  MdAddCircleOutline,
-  MdBusiness,
   MdSearch,
-  MdWarehouse,
 } from "react-icons/md";
+import { TbBuildingStore, TbHanger, TbShoppingCartPlus } from "react-icons/tb";
 
 //COMPONENTS
 import PageTitle from "../../components/PageTitle";
@@ -19,8 +17,9 @@ import ActionButton from "../../components/ActionButton";
 import { onOpen as onOpenNewCompanyModal } from "../../redux/companyModal/slice";
 import { onOpen as onOpenStockModal } from "../../redux/stockModal/slice";
 import { useAppDispatch } from "../../redux/store";
+
+//Service
 import { getAllCompanies } from "../../services/company.service";
-import { TbBuildingStore, TbHanger, TbShoppingCartPlus } from "react-icons/tb";
 
 const Business = () => {
   const [searchTerm, setSearchTerm] = useState("");
