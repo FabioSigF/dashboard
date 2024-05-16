@@ -37,7 +37,7 @@ const SalesReportModal = () => {
     <div className="max-md:overflow-hidden">
       <div className="overflow-x-auto">
         <div className="max-md:min-w-[1000px]">
-          <div className="grid grid-cols-10">
+          <div className="grid grid-cols-10 pb-4 border-b">
             <div className="col-span-3">Produto</div>
             <div className="col-span-2">Cor</div>
             <div className="col-span-1">Tamanho</div>

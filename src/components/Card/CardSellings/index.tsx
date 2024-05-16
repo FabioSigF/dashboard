@@ -226,7 +226,7 @@ const CardSellings = ({
   };
 
   return (
-    <Card title={getCardTitle()} subtitle="Quantidade de vendas realizadas">
+    <Card title={getCardTitle()} subtitle="Quantidade de vendas realizadas" >
       <div className="flex flex-col lg:flex-row gap-8 items-center lg:items-end max-md:overflow-hidden">
         <div className="max-md:overflow-x-auto max-md:max-w-full max-md:overflow-y-hidden">
           <div className="max-md:min-w-[500px]">

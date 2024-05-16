@@ -23,7 +23,7 @@ import {
   onOpenEdit,
 } from "../../redux/companyModal/slice";
 import Sellings from "../Sellings";
-import BestSellingClothes from "../../components/BestSellingClothes";
+import BestSellingClothes from "../../components/Charts/ChartBestSellingClothes";
 
 const Company = () => {
   const { id } = useParams();
