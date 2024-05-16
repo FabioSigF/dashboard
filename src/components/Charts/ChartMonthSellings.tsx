@@ -42,7 +42,7 @@ const ChartMonthSellings = ({ width, height, sellings }: Props) => {
       setSeriesData(salesData);
     };
 
-    separateSalesByDayOfMonth(sellings);
+    if(sellings.length > 0 )separateSalesByDayOfMonth(sellings);
   }, [sellings, currentMonth]);
 
   const options: ApexOptions = {

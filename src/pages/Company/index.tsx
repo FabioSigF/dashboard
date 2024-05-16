@@ -126,7 +126,7 @@ const Company = () => {
                   <div className="flex flex-col gap-12">
                     <div className="md:grid md:grid-cols-5 md:gap-8">
                       <div className="col-span-3 max-md:mb-12">
-                        <CardSellings chartRangeType="year" company_id={id} />
+                        <CardSellings chartRangeType="month" company_id={id} />
                       </div>
                       <div className="col-span-2">
                         <Sellings isAWidget />
@@ -137,10 +137,9 @@ const Company = () => {
                         <BestSellingClothes />
                       </div>
                       <div className="col-span-3">
-                        <CardSellings chartRangeType="week" company_id={id} />
+                        <CardSellings chartRangeType="year" company_id={id} />
                       </div>
                     </div>
-                    <CardSellings chartRangeType="month" company_id={id} />
                   </div>
                 ) : (
                   <div>Carregando...</div>

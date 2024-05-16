@@ -18,6 +18,9 @@ import {
 import { MdOutlineAttachMoney } from "react-icons/md";
 import { IoShirtOutline } from "react-icons/io5";
 import { AiOutlineShoppingCart } from "react-icons/ai";
+import ActionButton from "../../ActionButton";
+import { useAppDispatch } from "../../../redux/store";
+import { onOpen } from "../../../redux/salesReportModal/slice";
 
 type Props = {
   company_id?: string;
@@ -31,6 +34,8 @@ const CardSellings = ({
   chartRangeType,
 }: Props) => {
   const [sellings, setSellings] = useState<Sell[]>([]);
+
+  const dispatch = useAppDispatch();
 
   //Format date "YY-MM-DD"
   const formatDate = (date: Date): string => {
@@ -216,6 +221,10 @@ const CardSellings = ({
     }
   };
 
+  const handleOpenSalesReport = (sellings: Sell[]) => {
+    dispatch(onOpen({sales: sellings, reportRange: chartRangeType}));
+  };
+
   return (
     <Card title={getCardTitle()} subtitle="Quantidade de vendas realizadas">
       <div className="flex flex-col lg:flex-row gap-8 items-center lg:items-end max-md:overflow-hidden">
@@ -265,6 +274,9 @@ const CardSellings = ({
               </span>
             </div>
           </div>
+          <ActionButton action={() => handleOpenSalesReport(sellings)}>
+            Relatório de Vendas
+          </ActionButton>
         </div>
       </div>
     </Card>

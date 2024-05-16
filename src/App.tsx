@@ -19,6 +19,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Sellings from "./pages/Sellings";
 import Company from "./pages/Company";
 import Analytics from "./pages/Analytics";
+import SalesReportModal from "./layouts/Modal/SalesReportModal";
 
 const App = () => {
   const { isOpen } = useAppSelector((state) => state.sidebar);
@@ -41,6 +42,7 @@ const App = () => {
         <CompanyModal />
         <StockModal />
         <ScheduleModal />
+        <SalesReportModal />
         <div className={`relative ${isOpen ? "ml-[280px]" : "ml-[80px]"}`}>
           <Navbar />
           <Routes>
