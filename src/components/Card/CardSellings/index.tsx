@@ -34,8 +34,15 @@ const CardSellings = ({
   chartRangeType,
 }: Props) => {
   const [sellings, setSellings] = useState<Sell[]>([]);
-
   const dispatch = useAppDispatch();
+
+  const currentMonth = new Date().getMonth();
+  const [selectedMonth, setSelectedMonth] = useState(currentMonth + 1);
+
+  const currentYear = new Date().getFullYear();
+  const [selectedYear, setSelectedYear] = useState(currentYear);
+
+  const selectableYears = [currentYear, currentYear - 1, currentYear - 2];
 
   //Format date "YY-MM-DD"
   const formatDate = (date: Date): string => {
@@ -49,13 +56,7 @@ const CardSellings = ({
   const getSellingsOnMonth = async () => {
     setSellings([]);
     try {
-      let today;
-      if (chartRangeDate) {
-        today = new Date(chartRangeDate);
-      } else {
-        today = new Date();
-      }
-
+      const today = new Date(`${selectedYear}-${selectedMonth}-01`);
       // Obtém o primeiro dia do mês atual
       const firstDayOfMonth = new Date(
         today.getFullYear(),
@@ -77,6 +78,7 @@ const CardSellings = ({
           formatDate(lastDayOfMonth)
         );
         if (res != null) {
+          console.log(res.data);
           setSellings(res.data ? res.data : []);
         }
       } else {
@@ -141,12 +143,8 @@ const CardSellings = ({
   const getSellingsOnYear = async () => {
     setSellings([]);
     try {
-      let today;
-      if (chartRangeDate) {
-        today = new Date(chartRangeDate);
-      } else {
-        today = new Date();
-      }
+      const today = new Date(`${selectedYear}-${selectedMonth}-01`);
+
       const firstDayOfYear = new Date(today.getFullYear(), 0, 1); // Primeiro dia do ano atual
       const lastDayOfYear = new Date(today.getFullYear(), 11, 31); // Último dia do ano atual
       if (company_id) {
@@ -172,6 +170,22 @@ const CardSellings = ({
     }
   };
 
+  const handleOnChangeRangeDate = (n: number, type: "month" | "year") => {
+    if (type === "month") {
+      setSelectedMonth(n);
+      if (chartRangeDate) {
+        const [year, month, day] = chartRangeDate.split("-");
+        chartRangeDate = `${year}-${n}-01`;
+      } else chartRangeDate = `${selectedYear}-${n}-01`;
+    } else {
+      setSelectedYear(n);
+      if (chartRangeDate) {
+        const [year, month, day] = chartRangeDate.split("-");
+        chartRangeDate = `${n}-${month}-01`;
+      } else chartRangeDate = `${n}-${selectedMonth}-01`;
+    }
+  };
+
   //Recupera vendas da empresa na semana e mês atual
   useEffect(() => {
     switch (chartRangeType) {
@@ -185,7 +199,7 @@ const CardSellings = ({
         getSellingsOnYear();
         break;
     }
-  }, []);
+  }, [selectedMonth, selectedYear]);
 
   const calcTotalRevenue = (sellings: Sell[]) => {
     let total = 0;
@@ -221,12 +235,58 @@ const CardSellings = ({
     }
   };
 
+  const dateSelector = (
+    <div className="flex gap-4">
+      {chartRangeType === "month" && (
+        <select
+          name="month"
+          className="shadow-primary px-3 py-1 rounded-lg"
+          onChange={(e) =>
+            handleOnChangeRangeDate(Number(e.target.value), "month")
+          }
+          value={selectedMonth}
+        >
+          <option value={1}>Janeiro</option>
+          <option value={2}>Fevereiro</option>
+          <option value={3}>Março</option>
+          <option value={4}>Abril</option>
+          <option value={5}>Maio</option>
+          <option value={6}>Junho</option>
+          <option value={7}>Julho</option>
+          <option value={8}>Agosto</option>
+          <option value={9}>Setembro</option>
+          <option value={10}>Outubro</option>
+          <option value={11}>Novembro</option>
+          <option value={12}>Dezembro</option>
+        </select>
+      )}
+      <select
+        name="year"
+        className="shadow-primary px-3 py-1 rounded-lg"
+        onChange={(e) =>
+          handleOnChangeRangeDate(Number(e.target.value), "year")
+        }
+        value={selectedYear}
+      >
+        {selectableYears.map((item, key) => (
+          <option value={item} key={key}>
+            {item}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+
   const handleOpenSalesReport = (sellings: Sell[]) => {
-    dispatch(onOpen({sales: sellings, reportRange: chartRangeType}));
+    dispatch(onOpen({ sales: sellings, reportRange: chartRangeType }));
   };
 
   return (
-    <Card title={getCardTitle()} subtitle="Quantidade de vendas realizadas" >
+    <Card
+      title={getCardTitle()}
+      subtitle="Quantidade de vendas realizadas"
+      headerRightChildren={dateSelector}
+    >
       <div className="flex flex-col lg:flex-row gap-8 items-center lg:items-end max-md:overflow-hidden">
         <div className="max-md:overflow-x-auto max-md:max-w-full max-md:overflow-y-hidden">
           <div className="max-md:min-w-[500px]">

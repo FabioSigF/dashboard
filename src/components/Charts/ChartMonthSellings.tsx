@@ -12,7 +12,7 @@ type Props = {
 const ChartMonthSellings = ({ width, height, sellings }: Props) => {
   const [seriesData, setSeriesData] = useState<{ x: string; y: number }[]>([]);
   // Obtém o mês atual
-  const today = new Date();
+  const today = sellings.length > 0 ? new Date(sellings[0].date) : new Date();
   const currentMonth = today.getMonth();
   const currentYear = today.getFullYear();
 
@@ -42,7 +42,8 @@ const ChartMonthSellings = ({ width, height, sellings }: Props) => {
       setSeriesData(salesData);
     };
 
-    if(sellings.length > 0 )separateSalesByDayOfMonth(sellings);
+    if (sellings.length > 0) separateSalesByDayOfMonth(sellings);
+    else setSeriesData([]);
   }, [sellings, currentMonth]);
 
   const options: ApexOptions = {
@@ -57,7 +58,11 @@ const ChartMonthSellings = ({ width, height, sellings }: Props) => {
     },
     xaxis: {
       type: "datetime",
-      categories: seriesData.map((item) => new Date(currentYear, currentMonth, Number(item.x)).getTime()).sort((a, b) => a - b),
+      categories: seriesData
+        .map((item) =>
+          new Date(currentYear, currentMonth, Number(item.x)).getTime()
+        )
+        .sort((a, b) => a - b),
     },
     tooltip: {
       x: {
@@ -69,7 +74,12 @@ const ChartMonthSellings = ({ width, height, sellings }: Props) => {
   return (
     <ReactApexChart
       options={options}
-      series={[{ name: "Vendas", data: seriesData.map((item) => item.y) }]}
+      series={[
+        {
+          name: "Vendas",
+          data: seriesData ? seriesData.map((item) => item.y) : [],
+        },
+      ]}
       type="area"
       width={width}
       height={height}

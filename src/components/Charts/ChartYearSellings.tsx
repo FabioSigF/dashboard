@@ -48,6 +48,7 @@ const ChartYearSellings = ({ width, height, sellings }: Props) => {
       setSeriesData(newSeriesData);
     };
     if (sellings.length > 0) separeteSalesByMonth(sellings);
+    else setSeriesData([]);
   }, [sellings]);
 
   //Recupera o nome do mês
