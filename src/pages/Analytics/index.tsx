@@ -1,6 +1,7 @@
 import { Breadcrumb } from "../../types/global.type";
 import CardSellings from "../../components/Card/CardSellings";
 import PageTitle from "../../components/PageTitle";
+import ChartSellCategories from "../../components/Charts/ChartSellCategories";
 
 const Analytics = () => {
   const breadcrumb: Array<Breadcrumb> = [
@@ -23,6 +24,7 @@ const Analytics = () => {
         <CardSellings chartRangeType="year" />
         <CardSellings chartRangeType="month" />
         <CardSellings chartRangeType="week" />
+        <ChartSellCategories />
       </div>
     </div>
   );
