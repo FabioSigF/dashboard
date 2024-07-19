@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Card from "../Card";
 //Service
 import { findSellByDate } from "../../services/sell.service";
+import { getCompanyById } from "../../services/company.service";
 //Apex Chart
 import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
@@ -10,7 +11,6 @@ import { ApexOptions } from "apexcharts";
 import { Company, Sell } from "../../types/global.type";
 //Date
 import { format } from "date-fns";
-import { getCompanyById } from "../../services/company.service";
 
 const ChartSellCategories = () => {
   const currentYear = new Date().getFullYear();

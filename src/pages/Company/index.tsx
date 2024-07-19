@@ -81,7 +81,7 @@ const Company = () => {
         <div>
           <PageTitle title={company?.name} breadcrumb={breadcrumb} />
           <div
-            className="flex items-center gap-2 mt-4 cursor-pointer hover:text-primary-300 transition"
+            className="flex items-center gap-2 mt-12 cursor-pointer hover:text-primary-300 transition"
             onClick={() => handleOnEditCompany(company)}
           >
             Editar Empresa
